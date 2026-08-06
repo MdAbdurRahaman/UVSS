@@ -1,0 +1,54 @@
+<div style="display:flex;height:calc(100vh / var(--app-zoom));min-height:calc(840px / var(--app-zoom));background:var(--bg-app);overflow-x:auto;overflow-y:hidden;position:relative;">
+
+  <!-- ====== SIDEBAR ====== -->
+  <aside style="flex:0 0 226px;background:var(--surface-glass);backdrop-filter:var(--glass-blur);border-right:1px solid var(--border);display:flex;flex-direction:column;position:relative;z-index:2;">
+    <div style="display:flex;align-items:baseline;gap:8px;padding:18px 18px 16px;border-bottom:1px solid var(--border);">
+      <span style="font-family:var(--font-display);font-weight:var(--fw-bold);font-size:var(--text-xl);letter-spacing:var(--tracking-tight);color:var(--text);">UVSS</span>
+      <span style="font-family:var(--font-display);font-weight:var(--fw-semibold);font-size:var(--text-xs);color:var(--accent);letter-spacing:.08em;text-transform:uppercase;">Central</span>
+    </div>
+
+    <nav style="flex:1;padding:12px;display:flex;flex-direction:column;gap:3px;overflow-y:auto;">
+      <span class="side-group">Monitor</span>
+      <a class="side-item" routerLink="/central/command" routerLinkActive="active">
+        <i class="fa-solid fa-gauge-high"></i><span class="label">Overview</span>
+      </a>
+      <a class="side-item" routerLink="/central/alerts" routerLinkActive="active">
+        <i class="fa-solid fa-triangle-exclamation"></i><span class="label">Alerts</span>
+        <span style="font-family:var(--font-mono);font-size:10px;font-weight:600;color:var(--white);background:var(--status-danger);border-radius:var(--radius-full);padding:1px 7px;">3</span>
+      </a>
+      <a class="side-item" routerLink="/central/search" routerLinkActive="active">
+        <i class="fa-solid fa-magnifying-glass"></i><span class="label">Search</span>
+      </a>
+      <a class="side-item" routerLink="/central/review" routerLinkActive="active">
+        <i class="fa-solid fa-list-check"></i><span class="label">Review queue</span>
+        <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);background:var(--surface-raised);border-radius:var(--radius-full);padding:1px 7px;">6</span>
+      </a>
+
+      <span class="side-group" style="padding-top:16px;">Manage</span>
+      <a class="side-item" routerLink="/central/watchlist" routerLinkActive="active">
+        <i class="fa-solid fa-bars-staggered"></i><span class="label">Watchlist</span>
+      </a>
+      <a class="side-item" routerLink="/central/reports" routerLinkActive="active">
+        <i class="fa-solid fa-file-lines"></i><span class="label">Reports</span>
+      </a>
+      <a class="side-item" routerLink="/central/sites" routerLinkActive="active">
+        <i class="fa-solid fa-location-dot"></i><span class="label">Sites</span>
+      </a>
+    </nav>
+
+    <div style="padding:13px;border-top:1px solid var(--border);display:flex;align-items:center;gap:11px;">
+      <div style="width:34px;height:34px;border-radius:var(--radius-full);background:var(--brand);color:var(--text-on-brand);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:var(--fw-bold);font-size:var(--text-xs);">SK</div>
+      <div style="flex:1;line-height:1.25;">
+        <div style="font-size:var(--text-xs);font-weight:var(--fw-semibold);color:var(--text);">S. Karim</div>
+        <div style="font-size:11px;color:var(--text-faint);">Analyst</div>
+      </div>
+      <span class="chrome-btn" (click)="theme.toggle()" [title]="theme.toggleLabel"><i class="fa-solid" [ngClass]="theme.toggleIcon"></i></span>
+      <a (click)="logout()" title="Sign out" style="color:var(--text-faint);cursor:pointer;"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+    </div>
+  </aside>
+
+  <!-- ====== MAIN (per-page header + body) ====== -->
+  <div style="flex:1 1 auto;display:flex;flex-direction:column;min-width:0;position:relative;z-index:1;">
+    <router-outlet></router-outlet>
+  </div>
+</div>

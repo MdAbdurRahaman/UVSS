@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" class="dark" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <title>UVSS · Dubotech</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0D2B52">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- Theme bootstrap. Blocking on purpose and placed before any stylesheet:
+       the app is server-rendered, so without this the first paint is always the
+       document default and a stored light preference would flash dark→light on
+       every navigation. Reads localStorage directly (no Angular yet) and stamps
+       both hooks the design system honours: `.dark` and [data-theme]. -->
+  <script>
+    (function () {
+      try {
+        var mode = localStorage.getItem('uvss-theme') === 'light' ? 'light' : 'dark';
+        var root = document.documentElement;
+        root.classList.toggle('dark', mode === 'dark');
+        root.setAttribute('data-theme', mode);
+      } catch (e) { /* storage blocked — keep the dark default already on <html> */ }
+    })();
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <!-- Nunito = display/wordmark, JetBrains Mono = telemetry readouts. Body sans
+       is the OS default stack (see --font-sans), so no webfont for it. -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 — the design system's single icon set. -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>

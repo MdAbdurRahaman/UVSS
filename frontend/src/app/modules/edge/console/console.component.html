@@ -1,0 +1,226 @@
+<!-- LEFT: viewer + history -->
+<section style="flex:1 1 auto;display:flex;flex-direction:column;gap:12px;min-width:0;">
+
+  <div style="flex:1 1 auto;background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow-2xl);display:flex;flex-direction:column;overflow:hidden;min-height:0;">
+    <!-- viewer header -->
+    <div style="flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--border);gap:12px;">
+      <div style="display:flex;align-items:center;gap:4px;background:var(--bg-app-deep);border:1px solid var(--border);border-radius:var(--radius-lg);padding:3px;">
+        <span (click)="setView('composite')" [style.color]="tabColor('composite')" [style.background]="tabBg('composite')" style="font-family:var(--font-display);font-weight:var(--fw-semibold);font-size:var(--text-xs);border-radius:var(--radius-md);padding:6px 13px;cursor:pointer;">Composite</span>
+        <span (click)="setView('stereo')" [style.color]="tabColor('stereo')" [style.background]="tabBg('stereo')" style="font-family:var(--font-display);font-weight:var(--fw-semibold);font-size:var(--text-xs);border-radius:var(--radius-md);padding:6px 13px;cursor:pointer;">3D stereo</span>
+        <span (click)="setView('live')" [style.color]="tabColor('live')" [style.background]="tabBg('live')" style="font-family:var(--font-display);font-weight:var(--fw-semibold);font-size:var(--text-xs);border-radius:var(--radius-md);padding:6px 13px;cursor:pointer;">Live video</span>
+        <span (click)="setView('side')" [style.color]="tabColor('side')" [style.background]="tabBg('side')" style="font-family:var(--font-display);font-weight:var(--fw-semibold);font-size:var(--text-xs);border-radius:var(--radius-md);padding:6px 13px;cursor:pointer;">Side view</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span style="display:inline-flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted);font-variant-numeric:tabular-nums;"><i class="fa-solid fa-gauge-high" style="color:var(--accent);"></i>4.2 km/h</span>
+        <span *ngIf="cur.detections > 0" class="pill pill-danger"><span class="pill-dot"></span>{{ cur.detections }} detection{{ cur.detections === 1 ? '' : 's' }}</span>
+        <span *ngIf="cur.detections === 0" class="pill pill-online"><span class="pill-dot"></span>No threats</span>
+      </div>
+    </div>
+
+    <!-- viewer canvas -->
+    <div style="flex:1 1 auto;position:relative;background:var(--bg-app-deep);overflow:hidden;min-height:0;">
+
+      <!-- COMPOSITE -->
+      <div [style.display]="view === 'composite' ? 'block' : 'none'" style="position:absolute;inset:0;">
+        <img src="assets/undercarriage.jpg" alt="stitched undercarriage composite" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);"/>
+        <div *ngIf="isLive" style="position:absolute;left:0;right:0;height:46px;background:linear-gradient(180deg,transparent,rgba(34,211,238,.12),rgba(34,211,238,.5),transparent);animation:sweepv 3.4s linear infinite;"></div>
+
+        <!-- front-to-rear travel axis -->
+        <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:9px;background:rgba(3,7,18,.72);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-full);padding:5px 13px;">
+          <span style="font-family:var(--font-display);font-weight:var(--fw-bold);font-size:10px;color:var(--white);letter-spacing:.1em;">FRONT</span>
+          <svg width="54" height="8" viewBox="0 0 54 8" fill="none"><path d="M0 4h48M44 1l5 3-5 3" stroke="#22d3ee" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-family:var(--font-display);font-weight:var(--fw-bold);font-size:10px;color:rgba(255,255,255,.75);letter-spacing:.1em;">REAR</span>
+        </div>
+
+        <!-- AI detections — only drawn on a scan the model flagged -->
+        <div *ngIf="cur.risk >= 70" style="position:absolute;inset:0;">
+          <div style="position:absolute;left:39%;top:40%;width:20%;height:22%;border:2px solid var(--status-danger);border-radius:var(--radius-sm);">
+            <span style="position:absolute;top:-23px;left:-1px;background:var(--status-danger);color:var(--white);font-family:var(--font-mono);font-size:10px;font-weight:600;padding:2px 7px;border-radius:var(--radius-sm);white-space:nowrap;">THREAT · foreign object {{ cur.threat.toFixed(2) }}</span>
+          </div>
+          <div style="position:absolute;left:13%;top:24%;width:15%;height:40%;border:2px dashed var(--status-danger);border-radius:var(--radius-sm);">
+            <span style="position:absolute;top:-22px;left:-1px;background:rgba(3,7,18,.82);color:var(--red-400);font-family:var(--font-mono);font-size:10px;padding:2px 7px;border-radius:var(--radius-sm);white-space:nowrap;">Anomaly region</span>
+          </div>
+          <div style="position:absolute;right:13%;top:34%;width:13%;height:26%;border:2px solid var(--status-danger);border-radius:var(--radius-sm);">
+            <span style="position:absolute;bottom:-21px;right:-1px;background:rgba(3,7,18,.82);color:var(--red-400);font-family:var(--font-mono);font-size:10px;padding:2px 7px;border-radius:var(--radius-sm);white-space:nowrap;">Baseline difference</span>
+          </div>
+        </div>
+
+        <!-- capture state chip -->
+        <div style="position:absolute;left:12px;top:12px;display:flex;align-items:center;gap:7px;background:rgba(3,7,18,.7);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-full);padding:5px 11px;">
+          <span style="width:6px;height:6px;border-radius:var(--radius-full);background:var(--status-online);animation:pulse 1.4s infinite;"></span>
+          <span style="font-family:var(--font-mono);font-size:10px;color:var(--white);letter-spacing:.04em;">{{ isLive ? 'CAPTURING' : cur.id + ' · REVIEW' }}</span>
+        </div>
+        <!-- zoom controls -->
+        <div style="position:absolute;right:12px;top:12px;display:flex;flex-direction:column;background:rgba(3,7,18,.72);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
+          <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--white);border-bottom:1px solid var(--border);"><i class="fa-solid fa-plus" style="font-size:12px;"></i></span>
+          <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--white);"><i class="fa-solid fa-minus" style="font-size:12px;"></i></span>
+        </div>
+        <!-- scale bar -->
+        <div style="position:absolute;left:12px;bottom:14px;display:flex;align-items:center;gap:7px;">
+          <div style="width:80px;height:3px;background:var(--white);border-left:1px solid var(--white);border-right:1px solid var(--white);"></div>
+          <span style="font-family:var(--font-mono);font-size:10px;color:rgba(255,255,255,.8);">0.5 m</span>
+        </div>
+      </div>
+
+      <!-- 3D STEREO -->
+      <div (mousedown)="stereoDown($event)" [style.display]="view === 'stereo' ? 'block' : 'none'" style="position:absolute;inset:0;cursor:grab;background:var(--bg-app-deep);overflow:hidden;">
+        <img src="assets/undercarriage-3d.jpg" alt="3d stereo composite" draggable="false" [style.transform]="stereoTransform" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transform-origin:center;transition:transform .04s linear;"/>
+        <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:9px;background:rgba(3,7,18,.72);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-full);padding:5px 13px;pointer-events:none;">
+          <i class="fa-solid fa-cube" style="font-size:11px;color:var(--accent);"></i>
+          <span style="font-family:var(--font-display);font-weight:var(--fw-bold);font-size:10px;color:var(--white);letter-spacing:.08em;">3D STEREO · RED / CYAN ANAGLYPH</span>
+        </div>
+        <div style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:7px;background:rgba(3,7,18,.7);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-full);padding:5px 13px;pointer-events:none;">
+          <i class="fa-solid fa-arrows-up-down-left-right" style="font-size:11px;color:var(--accent);"></i>
+          <span style="font-family:var(--font-display);font-weight:var(--fw-semibold);font-size:10px;color:rgba(255,255,255,.75);letter-spacing:.04em;">Drag to rotate the 3D model</span>
+        </div>
+      </div>
+
+      <!-- LIVE VIDEO -->
+      <div [style.display]="view === 'live' ? 'block' : 'none'" style="position:absolute;inset:0;">
+        <img src="assets/vehicle-front.jpg" alt="live entry camera" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
+        <div style="position:absolute;top:12px;left:12px;display:flex;align-items:center;gap:7px;background:var(--status-danger);border-radius:var(--radius-full);padding:5px 12px;">
+          <span style="width:7px;height:7px;border-radius:var(--radius-full);background:var(--white);animation:pulse 1.4s infinite;"></span>
+          <span style="font-family:var(--font-display);font-weight:var(--fw-bold);font-size:10px;color:var(--white);letter-spacing:.1em;">LIVE</span>
+        </div>
+        <span style="position:absolute;top:14px;right:14px;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--white);text-shadow:0 1px 3px rgba(0,0,0,.8);font-variant-numeric:tabular-nums;">ENTRY CAM · 14:32:08</span>
+        <div style="position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:11px;padding:12px 14px;background:linear-gradient(0deg,rgba(3,7,18,.85),transparent);">
+          <span style="width:34px;height:34px;border-radius:var(--radius-full);background:var(--surface-raised);border:1px solid var(--border-strong);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--white);"><i class="fa-solid fa-pause" style="font-size:11px;"></i></span>
+          <div style="flex:1;height:4px;border-radius:var(--radius-full);background:var(--surface-raised);overflow:hidden;"><div style="width:64%;height:100%;background:var(--accent);"></div></div>
+          <span style="font-family:var(--font-mono);font-size:var(--text-xs);color:var(--white);font-variant-numeric:tabular-nums;">00:07 / 00:11</span>
+        </div>
+      </div>
+
+      <!-- SIDE VIEW -->
+      <div [style.display]="view === 'side' ? 'flex' : 'none'" style="position:absolute;inset:0;flex-direction:column;">
+        <div style="flex:1;position:relative;border-bottom:1px solid var(--border-strong);overflow:hidden;">
+          <img src="assets/side-base-left.jpg" alt="side left full" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
+          <span style="position:absolute;top:12px;left:12px;background:rgba(3,7,18,.72);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-full);padding:4px 11px;font-family:var(--font-display);font-weight:var(--fw-bold);font-size:10px;color:var(--white);letter-spacing:.08em;">SIDE · LEFT</span>
+        </div>
+        <div style="flex:1;position:relative;overflow:hidden;">
+          <img src="assets/side-base-right.jpg" alt="side right full" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
+          <span style="position:absolute;top:12px;left:12px;background:rgba(3,7,18,.72);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-full);padding:4px 11px;font-family:var(--font-display);font-weight:var(--fw-bold);font-size:10px;color:var(--white);letter-spacing:.08em;">SIDE · RIGHT</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- history filmstrip -->
+  <div style="flex:0 0 auto;background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:12px 14px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <span style="font-family:var(--font-display);font-weight:var(--fw-semibold);font-size:var(--text-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);">Scan history · today</span>
+      <a routerLink="/edge/history" style="font-size:var(--text-xs);font-weight:var(--fw-semibold);color:var(--accent);">All records <i class="fa-solid fa-arrow-right" style="font-size:9px;"></i></a>
+    </div>
+    <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:2px;">
+      <div *ngFor="let s of scans; let i = index" (click)="select(i)"
+           [style.border]="selected === i ? '1px solid var(--accent)' : '1px solid var(--border)'"
+           style="flex:0 0 152px;border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:border-color var(--dur-fast) var(--ease-standard);">
+        <div [style.background]="thumbBg(i)" [style.filter]="selected === i ? 'none' : 'grayscale(.3)'" style="height:48px;"></div>
+        <div style="padding:7px 9px;background:var(--surface);">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-family:var(--font-mono);font-size:11px;color:var(--text);">{{ s.id }}</span>
+            <span [style.color]="badgeColor(s)" [style.background]="badgeBg(s)" style="font-family:var(--font-mono);font-size:10px;font-weight:600;border-radius:var(--radius-full);padding:1px 7px;">{{ s.risk }}</span>
+          </div>
+          <span style="font-size:10px;color:var(--text-faint);">{{ s.time }} · {{ s.tag }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RIGHT: decision column -->
+<aside style="flex:0 0 392px;display:flex;flex-direction:column;gap:12px;min-height:0;overflow-y:auto;">
+
+  <!-- DECISION (TOP PRIORITY) -->
+  <div style="flex:0 0 auto;background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow-2xl);padding:15px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <span style="font-family:var(--font-display);font-weight:var(--fw-semibold);font-size:var(--text-xs);letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);">Operator decision</span>
+      <span style="font-size:11px;color:var(--text-faint);">you make the call</span>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button type="button" class="ctrl ctrl-success"><i class="fa-solid fa-check"></i>Pass</button>
+      <button type="button" class="ctrl ctrl-danger"><i class="fa-solid fa-hand"></i>Halt</button>
+    </div>
+  </div>
+
+  <!-- CAMERAS -->
+  <div class="panel">
+    <div class="panel-head"><i class="fa-solid fa-video"></i><span>Vehicle cameras</span></div>
+    <div class="panel-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">
+        <div style="border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--bg-app-deep);position:relative;">
+          <img src="assets/vehicle-front.jpg" alt="front anpr" style="width:100%;height:74px;object-fit:cover;display:block;"/>
+          <span class="cam-tag">ANPR · FRONT</span>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--bg-app-deep);position:relative;">
+          <img src="assets/vehicle-rear2.jpg" alt="rear anpr" style="width:100%;height:74px;object-fit:cover;display:block;"/>
+          <span class="cam-tag">ANPR · REAR</span>
+        </div>
+        <div (click)="setView('side')" style="border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--bg-app-deep);position:relative;cursor:pointer;">
+          <img src="assets/side-base-left.jpg" alt="side left" style="width:100%;height:74px;object-fit:cover;display:block;"/>
+          <span class="cam-tag">SIDE · LEFT</span>
+        </div>
+        <div (click)="setView('side')" style="border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--bg-app-deep);position:relative;cursor:pointer;">
+          <img src="assets/side-base-right.jpg" alt="side right" style="width:100%;height:74px;object-fit:cover;display:block;"/>
+          <span class="cam-tag">SIDE · RIGHT</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANPR -->
+  <div class="panel">
+    <div class="panel-head"><i class="fa-solid fa-id-card"></i><span>Number plate</span></div>
+    <div class="panel-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px;">
+        <div style="background:var(--bg-app-deep);border:1px solid var(--border);border-radius:var(--radius-lg);padding:9px;display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <img src="assets/plate.jpg" alt="front plate" style="height:34px;border-radius:var(--radius-sm);display:block;"/>
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-faint);letter-spacing:.06em;">FRONT · 98.6%</span>
+        </div>
+        <div style="background:var(--bg-app-deep);border:1px solid var(--border);border-radius:var(--radius-lg);padding:9px;display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <img src="assets/plate.jpg" alt="rear plate" style="height:34px;border-radius:var(--radius-sm);display:block;"/>
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-faint);letter-spacing:.06em;">REAR · 97.9%</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600;color:var(--text);letter-spacing:.04em;">{{ cur.plate }}</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;font-size:var(--text-xs);color:var(--status-online);"><i class="fa-solid fa-check" style="font-size:10px;"></i>front = rear</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DRIVER FACE (SEPARATED MODULE) -->
+  <app-driver-face></app-driver-face>
+
+  <!-- RISK -->
+  <div class="panel" style="box-shadow:var(--shadow-lg);">
+    <div class="panel-head"><i class="fa-solid fa-shield-halved"></i><span>Risk score</span></div>
+    <div class="panel-body">
+      <div style="display:flex;align-items:flex-end;gap:13px;margin-bottom:13px;">
+        <span [style.color]="riskColor(cur.risk)" style="font-family:var(--font-mono);font-size:var(--text-5xl);font-weight:700;line-height:.9;font-variant-numeric:tabular-nums;">{{ cur.risk }}</span>
+        <div style="padding-bottom:6px;">
+          <div [style.color]="riskColor(cur.risk)" style="font-family:var(--font-display);font-weight:var(--fw-bold);font-size:var(--text-sm);">{{ riskBand(cur.risk) }}</div>
+          <div style="font-size:var(--text-xs);color:var(--text-muted);">{{ riskAdvice(cur.risk) }}</div>
+        </div>
+      </div>
+      <div style="height:6px;border-radius:var(--radius-full);background:var(--surface-raised);overflow:hidden;margin-bottom:15px;"><div [style.width.%]="cur.risk" [style.background]="riskColor(cur.risk)" style="height:100%;border-radius:var(--radius-full);"></div></div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:var(--text-xs);color:var(--text-muted);">Threat detection</span><span style="font-family:var(--font-mono);font-size:11px;color:var(--accent);">{{ cur.threat.toFixed(2) }}</span></div>
+          <div style="height:4px;border-radius:var(--radius-full);background:var(--surface-raised);overflow:hidden;"><div [style.width.%]="pct(cur.threat)" style="height:100%;background:var(--accent);"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:var(--text-xs);color:var(--text-muted);">Anomaly</span><span style="font-family:var(--font-mono);font-size:11px;color:var(--accent);">{{ cur.anomaly.toFixed(2) }}</span></div>
+          <div style="height:4px;border-radius:var(--radius-full);background:var(--surface-raised);overflow:hidden;"><div [style.width.%]="pct(cur.anomaly)" style="height:100%;background:var(--accent);"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:var(--text-xs);color:var(--text-muted);">Baseline difference</span><span style="font-family:var(--font-mono);font-size:11px;color:var(--accent);">{{ cur.baseline.toFixed(2) }}</span></div>
+          <div style="height:4px;border-radius:var(--radius-full);background:var(--surface-raised);overflow:hidden;"><div [style.width.%]="pct(cur.baseline)" style="height:100%;background:var(--accent);"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span style="font-size:var(--text-xs);color:var(--text-muted);">Plate watchlist</span><span [style.color]="cur.watchlist ? 'var(--status-danger)' : 'var(--status-online)'" style="font-family:var(--font-mono);font-size:11px;">{{ cur.watchlist ? 'hit' : 'clear' }}</span></div>
+          <div style="height:4px;border-radius:var(--radius-full);background:var(--surface-raised);overflow:hidden;"><div [style.width.%]="cur.watchlist ? 100 : 8" [style.background]="cur.watchlist ? 'var(--status-danger)' : 'var(--status-online)'" style="height:100%;"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>

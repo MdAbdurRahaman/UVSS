@@ -1,0 +1,85 @@
+:host {
+  flex: 1 1 auto;
+  display: flex;
+  gap: 14px;
+  padding: 14px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ── GlassPanel: the design system's defining surface ──
+   Frosted fill, hairline border, xl radius, titled header with an icon. */
+.panel {
+  flex: 0 0 auto;
+  background: var(--surface-glass);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+.panel-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  font-size: var(--text-xs);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.panel-head i { font-size: 12px; color: var(--accent); }
+.panel-body { padding: 13px 14px; }
+
+/* ── StatusPill: tinted state badge with a dot ── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--radius-full);
+  padding: 4px 11px;
+  font-family: var(--font-display);
+  font-weight: var(--fw-semibold);
+  font-size: 11px;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+.pill-dot { width: 6px; height: 6px; border-radius: var(--radius-full); background: currentColor; }
+.pill-danger { color: var(--red-400); background: rgb(239 68 68 / .12); border: 1px solid rgb(239 68 68 / .35); }
+.pill-online { color: var(--green-400); background: rgb(34 197 94 / .12); border: 1px solid rgb(34 197 94 / .35); }
+
+/* The 400-weight status hues are tuned for a dark backdrop; on the light theme
+   a 12% wash under them is too thin to read, so step the text down a stop. */
+:host-context([data-theme="light"]) .pill-danger { color: var(--red-600); border-color: rgb(220 38 38 / .4); }
+:host-context([data-theme="light"]) .pill-online { color: var(--green-700); border-color: rgb(21 128 61 / .4); }
+
+/* ── ControlButton: press-scale action button, block width ── */
+.ctrl {
+  flex: 1;
+  height: 44px;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--text-sm);
+  color: var(--white);
+  transition: transform var(--dur-base) var(--ease-standard),
+              background var(--dur-fast) var(--ease-standard);
+}
+.ctrl:hover { transform: scale(var(--hover-scale)); }
+.ctrl:active { transform: scale(var(--press-scale)); }
+.ctrl i { font-size: 13px; }
+
+.ctrl-success { background: var(--green-600); }
+.ctrl-success:hover { background: var(--green-500); }
+
+.ctrl-danger { background: var(--red-600); }
+.ctrl-danger:hover { background: var(--red-500); }

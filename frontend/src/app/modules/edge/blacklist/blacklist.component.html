@@ -1,0 +1,101 @@
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+  <div>
+    <div style="font:700 18px var(--font-display);letter-spacing:-.01em;color:var(--text);">Blacklist</div>
+    <div style="font:500 11.5px var(--font-sans);color:var(--text-faint);">Number plates that halt the lane on sight · BNS Issa Khan</div>
+  </div>
+  <span style="display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);border-radius:var(--radius-full);padding:7px 15px;font:600 12px var(--font-display);color:var(--accent);"><span style="width:7px;height:7px;border-radius:var(--radius-full);background:var(--status-danger);"></span>{{ activeCount }} / {{ total }} enforcing</span>
+</div>
+
+<!-- ── add plate ── -->
+<div class="card" style="margin-bottom:16px;">
+  <div class="card-head">
+    <span>Add number plate</span>
+    <span style="font:500 10.5px var(--font-sans);color:var(--text-faint);">Stored uppercase, spacing collapsed</span>
+  </div>
+
+  <div style="padding:16px;">
+    <div style="display:grid;grid-template-columns:1.5fr 1.2fr;gap:14px;margin-bottom:13px;">
+      <div class="field">
+        <label for="bl-plate">Number plate</label>
+        <input id="bl-plate" class="input input-plate" [(ngModel)]="plate" placeholder="DHA GA 09-7733" autocomplete="off" (keyup.enter)="add()"/>
+        <span *ngIf="normalised && normalised !== plate" style="font:500 10.5px var(--font-mono);color:var(--text-faint);">Will be saved as <span style="color:var(--accent);">{{ normalised }}</span></span>
+      </div>
+      <div class="field">
+        <label for="bl-reason">Reason</label>
+        <select id="bl-reason" class="input" [(ngModel)]="reason" style="padding:11px 13px;">
+          <option *ngFor="let r of reasons" [value]="r">{{ r }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:end;margin-bottom:14px;">
+      <div class="field">
+        <label>Severity</label>
+        <div style="display:flex;gap:8px;">
+          <span *ngFor="let s of severities" class="sev" [class.on]="severity === s"
+                [style.color]="severity === s ? severityText(s) : 'var(--text-muted)'"
+                (click)="severity = s">
+            <span [style.background]="severityColor(s)" style="width:8px;height:8px;border-radius:var(--radius-full);"></span>{{ s }}
+          </span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="bl-notes">Notes (optional)</label>
+        <input id="bl-notes" class="input" [(ngModel)]="notes" placeholder="Why this plate is blacklisted" (keyup.enter)="add()"/>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:14px;">
+      <button class="btn" type="button" (click)="add()"><i class="fa-solid fa-ban" style="font-size:11px;margin-right:7px;"></i>Add to blacklist</button>
+      <span *ngIf="error" class="err">{{ error }}</span>
+      <span *ngIf="justAdded && !error" class="ok"><i class="fa-solid fa-circle-check" style="margin-right:6px;"></i>{{ justAdded }} added — the lane will halt on the next match.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── current list ── -->
+<div class="card">
+  <div class="card-head">
+    <span>Blacklisted plates</span>
+    <span style="position:relative;display:inline-flex;align-items:center;">
+      <i class="fa-solid fa-magnifying-glass" style="position:absolute;left:11px;font-size:11px;color:var(--text-faint);"></i>
+      <input class="input" [(ngModel)]="query" placeholder="Filter plate or reason" style="width:220px;padding-left:30px;font-size:11.5px;"/>
+    </span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1.4fr 1.3fr 0.8fr 1.6fr 1.2fr 0.7fr 84px;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);font:600 9.5px var(--font-display);letter-spacing:.05em;text-transform:uppercase;color:var(--text-faint);background:var(--bg-app);align-items:center;">
+    <span>Plate</span><span>Reason</span><span>Severity</span><span>Notes</span><span>Added</span><span>Enforce</span><span></span>
+  </div>
+
+  <div *ngFor="let e of entries; let last = last"
+       [style.borderBottom]="last ? 'none' : '1px solid var(--border)'"
+       [style.borderLeft]="'3px solid ' + (e.active ? severityColor(e.severity) : 'transparent')"
+       [style.opacity]="e.active ? 1 : .55"
+       style="display:grid;grid-template-columns:1.4fr 1.3fr 0.8fr 1.6fr 1.2fr 0.7fr 84px;gap:10px;padding:12px 16px;align-items:center;">
+
+    <span style="font:700 13px var(--font-mono);letter-spacing:.04em;color:var(--text);">{{ e.plate }}</span>
+    <span style="font:500 11.5px var(--font-sans);color:var(--text-muted);">{{ e.reason }}</span>
+    <span [style.color]="severityText(e.severity)" style="font:700 10.5px var(--font-display);text-transform:uppercase;letter-spacing:.04em;">{{ e.severity }}</span>
+    <span style="font:400 11px var(--font-sans);color:var(--text-faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" [title]="e.notes">{{ e.notes || '—' }}</span>
+    <span style="font:500 10.5px var(--font-sans);color:var(--text-muted);line-height:1.35;">
+      {{ e.addedBy }}<br/><span style="font-family:var(--font-mono);color:var(--text-faint);">{{ e.addedAt | date:'dd MMM yy · HH:mm' }}</span>
+    </span>
+
+    <span (click)="toggleActive(e.id)" [style.background]="e.active ? 'var(--brand)' : 'var(--gray-600)'"
+          [title]="e.active ? 'Stop enforcing' : 'Enforce'"
+          style="width:42px;height:24px;border-radius:var(--radius-full);position:relative;cursor:pointer;flex:0 0 auto;transition:background var(--dur-fast) var(--ease-standard);">
+      <span [style.left]="e.active ? '21px' : '3px'" style="position:absolute;top:3px;width:18px;height:18px;border-radius:var(--radius-full);background:var(--surface);transition:left var(--dur-fast) var(--ease-standard);"></span>
+    </span>
+
+    <button class="btn-ghost" type="button" (click)="remove(e.id)">Remove</button>
+  </div>
+
+  <div *ngIf="!entries.length" style="padding:26px 16px;text-align:center;font:500 12px var(--font-sans);color:var(--text-faint);">
+    {{ total ? 'No plate matches that filter.' : 'The blacklist is empty — add a number plate above.' }}
+  </div>
+</div>
+
+<div style="display:flex;align-items:center;gap:9px;margin-top:16px;padding:12px 14px;background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:10px;">
+  <i class="fa-solid fa-circle-info" style="font-size:14px;color:var(--accent);"></i>
+  <span style="font:400 11.5px/1.4 var(--font-sans);color:var(--text-muted);">An enforcing plate raises a Blacklist alert and halts the lane on the next ANPR match. Who gets notified is set on <a routerLink="/edge/alerts" style="color:var(--accent);">Alerts → Notification policy</a>.</span>
+</div>

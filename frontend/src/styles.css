@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ════════════════════════════════════════════════════════════════════
+   UVSS global base — Dubo OS design system.
+
+   Tokens live in `src/styles/ds-tokens.css`, loaded ahead of this file by
+   angular.json. Screens are authored with explicit inline styles that read
+   `var(--…)` throughout, so this layer only carries resets, form/scrollbar
+   theming and the shared keyframes the ported screens reference.
+
+   Dark is the product default; light is opted into by the theme bootstrap
+   in index.html removing `.dark` and stamping `data-theme="light"`.
+   ════════════════════════════════════════════════════════════════════ */
+@layer base {
+  * { box-sizing: border-box; }
+  :root { --app-zoom: 1.15; }
+
+  /* Document never scrolls — the shells own a viewport-locked layout so the
+     top bar + rail stay fixed while only inner panels scroll. */
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+  body {
+    font-family: var(--font-sans);
+    color: var(--text);
+    background: var(--bg-app);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background var(--dur-slow) var(--ease-standard),
+                color var(--dur-slow) var(--ease-standard);
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  input, button, textarea, select { font-family: inherit; outline: none; }
+  input, textarea, select {
+    background: var(--bg-app-deep);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--brand-ring); }
+  input::placeholder, textarea::placeholder { color: var(--text-faint); }
+
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: var(--radius-full); }
+  ::-webkit-scrollbar-track { background: transparent; }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   Shared chrome primitives. Global rather than component-scoped: the theme
+   toggle appears in both shells plus sign-in and landing, and the camera
+   caption chip in both the Edge console and the Central site-live mirror.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* Square 32px icon button in the app chrome (theme toggle, Edge setup gear). */
+.chrome-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  flex: 0 0 auto;
+  transition: color var(--dur-fast) var(--ease-standard),
+              border-color var(--dur-fast) var(--ease-standard);
+}
+.chrome-btn:hover { color: var(--text); border-color: var(--border-strong); }
+.chrome-btn.active { color: var(--accent); border-color: var(--accent); }
+
+/* Caption chip pinned over a camera thumbnail. Always dark — it sits on the
+   video still, not on a themed surface. */
+.cam-tag {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: rgba(3, 7, 18, .75);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 2px 8px;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 9px;
+  color: var(--white);
+  letter-spacing: .06em;
+}
+
+/* Global up-scale — the design is authored in small inline px sizes; this
+   enlarges everything uniformly (text + UI) like a browser zoom. Tweak the
+   factor via --app-zoom. Shells divide their viewport height by the same var
+   so the zoomed layout fits exactly (no document scroll). */
+app-root { zoom: var(--app-zoom); }
+
+/* ── Shared keyframes referenced by the ported screens ── */
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+@keyframes sweeph { 0% { left: -8%; } 100% { left: 104%; } }
+/* Vertical scan line riding down the live composite in the Edge console. */
+@keyframes sweepv { 0% { top: -8%; } 100% { top: 104%; } }
+@keyframes grow { 0% { width: 0; } 100% { width: 72%; } }
+
+/* Live line-scan stitching, FRONT→REAR (left→right):
+   1) a BLACK curtain covers the un-scanned part and recedes left→right,
+   2) a GREEN scan core + trailing band ride the build edge,
+   3) image is revealed behind, then detections + risk pop in. */
+@keyframes stitchBlack {
+  0%   { left: 0%; }
+  85%  { left: 100%; }
+  100% { left: 100%; }
+}
+@keyframes stitchGreen {
+  0%   { left: 0%;   opacity: 1; }
+  85%  { left: 100%; opacity: 1; }
+  90%  { opacity: 0; }
+  100% { left: 100%; opacity: 0; }
+}
+/* AI detections + risk score pop in only once the stitch pass finishes. */
+@keyframes detectPop {
+  0%, 84%  { opacity: 0; }
+  90%      { opacity: 1; }
+  100%     { opacity: 1; }
+}
+/* Inverse: a "scoring…" placeholder shown while the stitch is still running. */
+@keyframes detectHide {
+  0%, 80%   { opacity: 1; }
+  90%, 100% { opacity: 0; }
+}

@@ -1,0 +1,184 @@
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+  <div>
+    <div style="display:flex;align-items:center;gap:9px;"><span style="font:700 18px var(--font-display);letter-spacing:-.01em;color:var(--text);">Alerts</span><span style="width:8px;height:8px;border-radius:var(--radius-full);background:var(--status-danger);animation:pulse 1.4s infinite;"></span></div>
+    <div style="font:500 11.5px var(--font-sans);color:var(--text-faint);">This site · blacklist &amp; watch hits, and who gets told</div>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <span class="tab" [class.active]="tab === 'feed'" (click)="tab = 'feed'"><i class="fa-solid fa-triangle-exclamation" style="font-size:11px;"></i>Feed</span>
+    <span class="tab" [class.active]="tab === 'policy'" (click)="tab = 'policy'"><i class="fa-solid fa-bell" style="font-size:11px;"></i>Notification policy<span style="font:600 10px var(--font-mono);opacity:.8;">{{ activePolicyCount }}</span></span>
+  </div>
+</div>
+
+<!-- ═══════════════ FEED ═══════════════ -->
+<ng-container *ngIf="tab === 'feed'">
+
+  <div style="display:flex;gap:8px;margin-bottom:16px;">
+    <span style="font:600 12px var(--font-display);color:var(--white);background:var(--brand);border-radius:var(--radius-full);padding:7px 15px;cursor:pointer;">All</span>
+    <span style="font:500 12px var(--font-display);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-full);padding:7px 15px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:var(--radius-full);background:var(--status-danger);"></span>Blacklist</span>
+    <span style="font:500 12px var(--font-display);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-full);padding:7px 15px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:var(--radius-full);background:var(--gray-600);"></span>Watch</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;">
+    <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:15px;"><div style="font:500 11px var(--font-sans);color:var(--text-faint);margin-bottom:8px;">Open alerts</div><div style="font:700 28px var(--font-display);color:var(--red-400);">2</div></div>
+    <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:15px;"><div style="font:500 11px var(--font-sans);color:var(--text-faint);margin-bottom:8px;">Today</div><div style="font:700 28px var(--font-display);color:var(--accent);">9</div></div>
+    <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:15px;"><div style="font:500 11px var(--font-sans);color:var(--text-faint);margin-bottom:8px;">Halted on alert</div><div style="font:700 28px var(--font-display);color:var(--accent);">5</div></div>
+  </div>
+
+  <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;">
+    <div style="display:grid;grid-template-columns:56px 1fr 1.3fr 0.8fr 0.7fr 0.9fr 90px;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);font:600 9.5px var(--font-display);letter-spacing:.05em;text-transform:uppercase;color:var(--text-faint);background:var(--bg-app);align-items:center;">
+      <span></span><span>Type</span><span>Plate</span><span>Scan</span><span style="text-align:right;">Risk</span><span>Status</span><span></span>
+    </div>
+    <div style="display:grid;grid-template-columns:56px 1fr 1.3fr 0.8fr 0.7fr 0.9fr 90px;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);border-left:3px solid var(--status-danger);align-items:center;">
+      <img src="assets/plate.jpg" alt="plate" style="width:56px;height:24px;object-fit:cover;border-radius:4px;border:1px solid var(--border);"/><span style="font:700 10.5px var(--font-display);color:var(--red-400);text-transform:uppercase;letter-spacing:.04em;">Blacklist</span><span style="font:500 12px var(--font-mono);color:var(--text);">DL 3C AD 8491</span><span style="font:500 11px var(--font-mono);color:var(--text-muted);">#A-2291</span><span style="text-align:right;font:700 11px var(--font-display);color:var(--white);background:var(--status-danger);border-radius:var(--radius-full);padding:1px 7px;justify-self:end;">84</span><span style="font:500 11px var(--font-sans);color:var(--red-400);">Open</span><a routerLink="/edge/console" style="font:600 10.5px var(--font-display);color:var(--white);background:var(--brand);border-radius:var(--radius-full);padding:5px 0;text-align:center;">Open scan</a>
+    </div>
+    <div style="display:grid;grid-template-columns:56px 1fr 1.3fr 0.8fr 0.7fr 0.9fr 90px;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);border-left:3px solid var(--gray-600);align-items:center;">
+      <div style="width:56px;height:24px;border-radius:4px;background:url('assets/undercarriage.jpg') 30% 60%/200% no-repeat;border:1px solid var(--border);filter:grayscale(.3);"></div><span style="font:700 10.5px var(--font-display);color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;">Watch</span><span style="font:500 12px var(--font-mono);color:var(--text);">CTG HA 21-4410</span><span style="font:500 11px var(--font-mono);color:var(--text-muted);">#A-2289</span><span style="text-align:right;font:700 11px var(--font-display);color:var(--text);background:var(--surface-raised);border-radius:var(--radius-full);padding:1px 7px;justify-self:end;">28</span><span style="font:500 11px var(--font-sans);color:var(--text-muted);">Open</span><a routerLink="/edge/console" style="font:600 10.5px var(--font-display);color:var(--accent);border:1px solid var(--border);border-radius:var(--radius-full);padding:5px 0;text-align:center;">Open scan</a>
+    </div>
+    <div style="display:grid;grid-template-columns:56px 1fr 1.3fr 0.8fr 0.7fr 0.9fr 90px;gap:10px;padding:11px 16px;border-left:3px solid transparent;align-items:center;opacity:.7;">
+      <div style="width:56px;height:24px;border-radius:4px;background:url('assets/undercarriage.jpg') 70% 40%/200% no-repeat;border:1px solid var(--border);filter:grayscale(.3);"></div><span style="font:700 10.5px var(--font-display);color:var(--red-400);text-transform:uppercase;letter-spacing:.04em;">Blacklist</span><span style="font:500 12px var(--font-mono);color:var(--text);">DHA GA 09-7733</span><span style="font:500 11px var(--font-mono);color:var(--text-muted);">#A-2271</span><span style="text-align:right;font:700 11px var(--font-display);color:var(--text-muted);background:var(--surface-raised);border-radius:var(--radius-full);padding:1px 7px;justify-self:end;">76</span><span style="font:500 11px var(--font-sans);color:var(--text-muted);">Resolved</span><a routerLink="/edge/console" style="font:600 10.5px var(--font-display);color:var(--text-faint);border:1px solid var(--border);border-radius:var(--radius-full);padding:5px 0;text-align:center;">View</a>
+    </div>
+  </div>
+</ng-container>
+
+<!-- ═══════════════ NOTIFICATION POLICY ═══════════════ -->
+<ng-container *ngIf="tab === 'policy'">
+
+  <!-- ── routing rules ── -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-head">
+      <span>Routing rules</span>
+      <span style="font:500 10.5px var(--font-sans);color:var(--text-faint);">Alert type → who gets notified, and how</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 0.7fr 0.9fr 2.2fr 0.7fr 84px;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);font:600 9.5px var(--font-display);letter-spacing:.05em;text-transform:uppercase;color:var(--text-faint);background:var(--bg-app);align-items:center;">
+      <span>Alert type</span><span>Min risk</span><span>Channels</span><span>Recipients</span><span>Rule</span><span></span>
+    </div>
+
+    <div *ngFor="let p of policies; let last = last"
+         [style.borderBottom]="last ? 'none' : '1px solid var(--border)'"
+         [style.opacity]="p.enabled ? 1 : .55"
+         style="display:grid;grid-template-columns:1fr 0.7fr 0.9fr 2.2fr 0.7fr 84px;gap:10px;padding:12px 16px;align-items:center;">
+
+      <span [style.color]="typeColor(p.type)" style="font:700 11px var(--font-display);text-transform:uppercase;letter-spacing:.04em;">{{ p.type }}</span>
+      <span style="font:600 11.5px var(--font-mono);color:var(--text);font-variant-numeric:tabular-nums;">{{ riskLabel(p) }}</span>
+      <span style="font:500 11px var(--font-sans);color:var(--text-muted);">{{ channelLabel(p) }}</span>
+
+      <div style="display:flex;flex-wrap:wrap;gap:5px;min-width:0;">
+        <span *ngFor="let r of recipientsFor(p)"
+              [title]="r.email + ' · ' + r.phone"
+              style="font:500 10.5px var(--font-sans);color:var(--text);background:var(--surface-raised);border:1px solid var(--border);border-radius:var(--radius-full);padding:3px 9px;white-space:nowrap;">{{ r.name }}</span>
+        <span *ngIf="!recipientsFor(p).length" style="font:500 11px var(--font-sans);color:var(--red-400);">No recipients</span>
+      </div>
+
+      <span (click)="togglePolicy(p.id)" [style.background]="p.enabled ? 'var(--brand)' : 'var(--gray-600)'"
+            [title]="p.enabled ? 'Disable rule' : 'Enable rule'"
+            style="width:42px;height:24px;border-radius:var(--radius-full);position:relative;cursor:pointer;flex:0 0 auto;transition:background var(--dur-fast) var(--ease-standard);">
+        <span [style.left]="p.enabled ? '21px' : '3px'" style="position:absolute;top:3px;width:18px;height:18px;border-radius:var(--radius-full);background:var(--surface);transition:left var(--dur-fast) var(--ease-standard);"></span>
+      </span>
+
+      <button class="btn-ghost" type="button" (click)="removePolicy(p.id)">Remove</button>
+    </div>
+
+    <div *ngIf="!policies.length" style="padding:22px 16px;text-align:center;font:500 12px var(--font-sans);color:var(--text-faint);">
+      No routing rules — alerts will be logged but nobody is notified.
+    </div>
+
+    <!-- new rule -->
+    <div style="padding:14px 16px;border-top:1px solid var(--border);background:var(--bg-app);">
+      <div style="font:600 9.5px var(--font-display);letter-spacing:.05em;text-transform:uppercase;color:var(--text-faint);margin-bottom:10px;">Add rule</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1.6fr;gap:12px;align-items:end;margin-bottom:11px;">
+        <div class="field">
+          <label for="p-type">Alert type</label>
+          <select id="p-type" class="input" [(ngModel)]="pType">
+            <option *ngFor="let t of alertTypes" [value]="t">{{ t }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="p-risk">Min risk (0 = any)</label>
+          <input id="p-risk" class="input" type="number" min="0" max="100" [(ngModel)]="pMinRisk"/>
+        </div>
+        <div class="field">
+          <label>Channels</label>
+          <div style="display:flex;gap:8px;">
+            <span class="pick" [class.on]="pEmail" (click)="pEmail = !pEmail"><i class="fa-solid" [ngClass]="pEmail ? 'fa-square-check' : 'fa-square'" style="font-size:11px;"></i>Email</span>
+            <span class="pick" [class.on]="pSms" (click)="pSms = !pSms"><i class="fa-solid" [ngClass]="pSms ? 'fa-square-check' : 'fa-square'" style="font-size:11px;"></i>SMS</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:11px;">
+        <label>Recipients</label>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;">
+          <span *ngFor="let r of recipients" class="pick" [class.on]="isPicked(r.id)" (click)="togglePickedRecipient(r.id)">
+            <i class="fa-solid" [ngClass]="isPicked(r.id) ? 'fa-square-check' : 'fa-square'" style="font-size:11px;"></i>{{ r.name }}
+          </span>
+          <span *ngIf="!recipients.length" style="font:500 11.5px var(--font-sans);color:var(--text-faint);">Add a recipient below first.</span>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="btn" type="button" (click)="addPolicy()"><i class="fa-solid fa-plus" style="font-size:10px;margin-right:6px;"></i>Add rule</button>
+        <span *ngIf="pError" class="err">{{ pError }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── recipients ── -->
+  <div class="card">
+    <div class="card-head">
+      <span>Recipients</span>
+      <span style="font:500 10.5px var(--font-sans);color:var(--text-faint);">{{ recipients.length }} on the notify list</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.1fr 1.6fr 1.2fr 1fr 84px;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);font:600 9.5px var(--font-display);letter-spacing:.05em;text-transform:uppercase;color:var(--text-faint);background:var(--bg-app);align-items:center;">
+      <span>Name</span><span>Email</span><span>Phone</span><span>Role</span><span></span>
+    </div>
+
+    <div *ngFor="let r of recipients; let last = last"
+         [style.borderBottom]="last ? 'none' : '1px solid var(--border)'"
+         style="display:grid;grid-template-columns:1.1fr 1.6fr 1.2fr 1fr 84px;gap:10px;padding:12px 16px;align-items:center;">
+      <span style="display:flex;align-items:center;gap:9px;min-width:0;">
+        <span style="width:26px;height:26px;flex:0 0 auto;border-radius:var(--radius-full);background:var(--surface-raised);color:var(--accent);display:flex;align-items:center;justify-content:center;font:700 10px var(--font-display);"><i class="fa-solid fa-user" style="font-size:10px;"></i></span>
+        <span style="font:600 12px var(--font-sans);color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ r.name }}</span>
+      </span>
+      <a [href]="'mailto:' + r.email" style="font:500 11.5px var(--font-mono);color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ r.email }}</a>
+      <a [href]="'tel:' + r.phone" style="font:500 11.5px var(--font-mono);color:var(--text);font-variant-numeric:tabular-nums;white-space:nowrap;">{{ r.phone }}</a>
+      <span style="font:500 11px var(--font-sans);color:var(--text-muted);">{{ r.role }}</span>
+      <button class="btn-ghost" type="button" (click)="removeRecipient(r.id)">Remove</button>
+    </div>
+
+    <div *ngIf="!recipients.length" style="padding:22px 16px;text-align:center;font:500 12px var(--font-sans);color:var(--text-faint);">
+      No recipients yet.
+    </div>
+
+    <!-- new recipient -->
+    <div style="padding:14px 16px;border-top:1px solid var(--border);background:var(--bg-app);">
+      <div style="font:600 9.5px var(--font-display);letter-spacing:.05em;text-transform:uppercase;color:var(--text-faint);margin-bottom:10px;">Add recipient</div>
+      <div style="display:grid;grid-template-columns:1.1fr 1.6fr 1.2fr 1fr auto;gap:12px;align-items:end;">
+        <div class="field">
+          <label for="r-name">Name</label>
+          <input id="r-name" class="input" [(ngModel)]="rName" placeholder="R. Ahmed" (keyup.enter)="addRecipient()"/>
+        </div>
+        <div class="field">
+          <label for="r-email">Email</label>
+          <input id="r-email" class="input" type="email" [(ngModel)]="rEmail" placeholder="name@dubotech.com" (keyup.enter)="addRecipient()"/>
+        </div>
+        <div class="field">
+          <label for="r-phone">Phone</label>
+          <input id="r-phone" class="input" type="tel" [(ngModel)]="rPhone" placeholder="+880 1711-000000" (keyup.enter)="addRecipient()"/>
+        </div>
+        <div class="field">
+          <label for="r-role">Role</label>
+          <input id="r-role" class="input" [(ngModel)]="rRole" placeholder="Lane operator" (keyup.enter)="addRecipient()"/>
+        </div>
+        <button class="btn" type="button" (click)="addRecipient()"><i class="fa-solid fa-plus" style="font-size:10px;margin-right:6px;"></i>Add</button>
+      </div>
+      <div *ngIf="rError" class="err" style="margin-top:9px;">{{ rError }}</div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:9px;margin-top:16px;padding:12px 14px;background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:10px;">
+    <i class="fa-solid fa-circle-info" style="font-size:14px;color:var(--accent);"></i>
+    <span style="font:400 11.5px/1.4 var(--font-sans);color:var(--text-muted);">A rule fires when an alert of that type reaches its minimum risk score. Every matching rule dispatches, so a recipient on two rules is notified once per rule.</span>
+  </div>
+</ng-container>

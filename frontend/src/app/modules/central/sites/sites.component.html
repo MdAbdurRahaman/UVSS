@@ -1,0 +1,104 @@
+<header style="flex:0 0 auto;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:var(--surface-glass);backdrop-filter:var(--glass-blur);border-bottom:1px solid var(--border);">
+  <div>
+    <div style="font:700 18px var(--font-display);letter-spacing:-.01em;color:var(--text);">Sites</div>
+    <div style="font:500 11.5px var(--font-sans);color:var(--text-faint);">6 deployed sites · click a site to watch it live</div>
+  </div>
+  <span style="display:inline-flex;align-items:center;gap:7px;border-radius:var(--radius-full);padding:9px 17px;font:600 12px var(--font-display);color:var(--white);background:var(--brand);cursor:pointer;"><i class="fa-solid fa-plus" style="font-size:11px;"></i>Add site</span>
+</header>
+
+<div style="flex:1 1 auto;overflow-y:auto;padding:18px 22px 22px;">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+
+    <!-- Site 01 (scanning) -->
+    <a class="site-card active" routerLink="/central/site/01">
+      <div style="height:120px;background:url('assets/undercarriage.jpg') center/cover no-repeat;position:relative;">
+        <span style="position:absolute;top:10px;left:10px;display:flex;align-items:center;gap:6px;background:rgba(13,43,82,.85);border-radius:var(--radius-full);padding:4px 10px;"><span style="width:6px;height:6px;border-radius:var(--radius-full);background:var(--status-online);animation:pulse 1.4s infinite;"></span><span style="font:600 10px var(--font-display);color:var(--white);">SCANNING</span></span>
+        <span style="position:absolute;top:10px;right:10px;background:var(--status-danger);border-radius:var(--radius-full);padding:3px 9px;font:700 10px var(--font-display);color:var(--white);">2 alerts</span>
+      </div>
+      <div style="padding:13px 15px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;"><span style="font:700 14px var(--font-display);color:var(--text);">Site 01 · BNS Issa Khan</span><i class="fa-solid fa-arrow-right" style="font-size:13px;color:var(--accent);"></i></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Scans today</div><div style="font:600 14px var(--font-mono);color:var(--text);">312</div></div>
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Avg risk</div><div style="font:600 14px var(--font-mono);color:var(--text);">31</div></div>
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Tunnel</div><div style="font:600 14px var(--font-display);color:var(--status-online);">Up</div></div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Site 02 -->
+    <a class="site-card" routerLink="/central/site/02">
+      <div style="height:120px;background:url('assets/undercarriage.jpg') 30% 40%/cover no-repeat;filter:grayscale(.25);position:relative;">
+        <span style="position:absolute;top:10px;left:10px;display:flex;align-items:center;gap:6px;background:rgba(13,43,82,.85);border-radius:var(--radius-full);padding:4px 10px;"><span style="width:6px;height:6px;border-radius:var(--radius-full);background:var(--status-idle);"></span><span style="font:600 10px var(--font-display);color:var(--white);">IDLE</span></span>
+      </div>
+      <div style="padding:13px 15px;">
+        <div style="font:700 14px var(--font-display);color:var(--text);margin-bottom:9px;">Site 02 · Chattogram Port</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Scans today</div><div style="font:600 14px var(--font-mono);color:var(--text);">188</div></div>
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Avg risk</div><div style="font:600 14px var(--font-mono);color:var(--text);">18</div></div>
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Tunnel</div><div style="font:600 14px var(--font-display);color:var(--status-online);">Up</div></div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Site 03 -->
+    <a class="site-card" routerLink="/central/site/03">
+      <div style="height:120px;background:url('assets/undercarriage.jpg') 70% 60%/cover no-repeat;position:relative;">
+        <span style="position:absolute;top:10px;left:10px;display:flex;align-items:center;gap:6px;background:rgba(13,43,82,.85);border-radius:var(--radius-full);padding:4px 10px;"><span style="width:6px;height:6px;border-radius:var(--radius-full);background:var(--status-online);animation:pulse 1.4s infinite;"></span><span style="font:600 10px var(--font-display);color:var(--white);">SCANNING</span></span>
+        <span style="position:absolute;top:10px;right:10px;background:var(--surface-raised);border-radius:var(--radius-full);padding:3px 9px;font:700 10px var(--font-display);color:var(--text);">1 alert</span>
+      </div>
+      <div style="padding:13px 15px;">
+        <div style="font:700 14px var(--font-display);color:var(--text);margin-bottom:9px;">Site 03 · Mongla Port</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Scans today</div><div style="font:600 14px var(--font-mono);color:var(--text);">241</div></div>
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Avg risk</div><div style="font:600 14px var(--font-mono);color:var(--text);">24</div></div>
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Tunnel</div><div style="font:600 14px var(--font-display);color:var(--status-online);">Up</div></div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Site 04 (offline) -->
+    <a class="site-card offline" routerLink="/central/site/04">
+      <div style="height:120px;background:url('assets/undercarriage.jpg') 20% 80%/cover no-repeat;filter:grayscale(.7);position:relative;">
+        <span style="position:absolute;top:10px;left:10px;display:flex;align-items:center;gap:6px;background:rgba(13,43,82,.85);border-radius:var(--radius-full);padding:4px 10px;"><span style="width:6px;height:6px;border-radius:var(--radius-full);background:var(--status-danger);"></span><span style="font:600 10px var(--font-display);color:var(--white);">OFFLINE</span></span>
+      </div>
+      <div style="padding:13px 15px;">
+        <div style="font:700 14px var(--font-display);color:var(--text);margin-bottom:9px;">Site 04 · Payra Port</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Scans today</div><div style="font:600 14px var(--font-mono);color:var(--text);">96</div></div>
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Avg risk</div><div style="font:600 14px var(--font-mono);color:var(--text);">—</div></div>
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Tunnel</div><div style="font:600 14px var(--font-display);color:var(--red-400);">Down</div></div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Site 05 -->
+    <a class="site-card" routerLink="/central/site/05">
+      <div style="height:120px;background:url('assets/undercarriage.jpg') 90% 20%/cover no-repeat;filter:grayscale(.25);position:relative;">
+        <span style="position:absolute;top:10px;left:10px;display:flex;align-items:center;gap:6px;background:rgba(13,43,82,.85);border-radius:var(--radius-full);padding:4px 10px;"><span style="width:6px;height:6px;border-radius:var(--radius-full);background:var(--status-idle);"></span><span style="font:600 10px var(--font-display);color:var(--white);">IDLE</span></span>
+      </div>
+      <div style="padding:13px 15px;">
+        <div style="font:700 14px var(--font-display);color:var(--text);margin-bottom:9px;">Site 05 · Benapole Port</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Scans today</div><div style="font:600 14px var(--font-mono);color:var(--text);">203</div></div>
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Avg risk</div><div style="font:600 14px var(--font-mono);color:var(--text);">20</div></div>
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Tunnel</div><div style="font:600 14px var(--font-display);color:var(--status-online);">Up</div></div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Site 06 -->
+    <a class="site-card" routerLink="/central/site/06">
+      <div style="height:120px;background:url('assets/undercarriage.jpg') 50% 50%/cover no-repeat;filter:grayscale(.25);position:relative;">
+        <span style="position:absolute;top:10px;left:10px;display:flex;align-items:center;gap:6px;background:rgba(13,43,82,.85);border-radius:var(--radius-full);padding:4px 10px;"><span style="width:6px;height:6px;border-radius:var(--radius-full);background:var(--status-idle);"></span><span style="font:600 10px var(--font-display);color:var(--white);">IDLE</span></span>
+      </div>
+      <div style="padding:13px 15px;">
+        <div style="font:700 14px var(--font-display);color:var(--text);margin-bottom:9px;">Site 06 · Teknaf Port</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Scans today</div><div style="font:600 14px var(--font-mono);color:var(--text);">140</div></div>
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Avg risk</div><div style="font:600 14px var(--font-mono);color:var(--text);">22</div></div>
+          <div><div style="font:500 9.5px var(--font-sans);color:var(--text-faint);">Tunnel</div><div style="font:600 14px var(--font-display);color:var(--status-online);">Up</div></div>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>

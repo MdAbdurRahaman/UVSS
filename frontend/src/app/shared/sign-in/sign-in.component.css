@@ -1,0 +1,9 @@
+:host { display: block; height: 100%; }
+
+/* The design's form inputs sit on the glass panel, not the deep well the
+   global base styles them for — override fill/border to the panel treatment. */
+input {
+  background: var(--bg-app) !important;
+  border-color: var(--border) !important;
+}
+input:focus { border-color: var(--brand-ring) !important; }

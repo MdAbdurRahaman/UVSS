@@ -1,0 +1,32 @@
+:host {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Analyst resolution buttons — ControlButton variants (press-scale, lg radius). */
+.act {
+  flex: 1;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-lg);
+  padding: 12px 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 13px;
+  transition: transform var(--dur-base) var(--ease-standard),
+              background var(--dur-fast) var(--ease-standard);
+}
+.act:hover { transform: scale(1.02); }
+.act:active { transform: scale(var(--press-scale)); }
+
+.act-ghost { background: transparent; border: 1px solid var(--border-strong); color: var(--text); }
+.act-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+.act-brand { background: var(--brand); color: var(--white); }
+.act-brand:hover { background: var(--brand-hover); }
+
+.act-danger { background: var(--red-600); color: var(--white); }
+.act-danger:hover { background: var(--red-500); }

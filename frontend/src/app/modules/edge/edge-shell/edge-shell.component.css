@@ -1,0 +1,30 @@
+:host { display: contents; }
+
+/* Rail item — inactive is muted, active picks up the accent on a raised surface. */
+.rail-item {
+  width: 60px;
+  padding: 10px 0;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: background var(--dur-fast) var(--ease-standard),
+              color var(--dur-fast) var(--ease-standard);
+}
+.rail-item i { font-size: 17px; }
+.rail-item span {
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  font-size: 10px;
+  color: inherit;
+}
+.rail-item:hover { background: var(--surface-raised); color: var(--text); }
+
+.rail-item.active {
+  background: var(--surface-raised);
+  color: var(--accent);
+}
+.rail-item.active span { font-weight: var(--fw-semibold); }

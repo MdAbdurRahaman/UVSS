@@ -1,0 +1,64 @@
+<div class="panel">
+  <div class="panel-head" style="display:flex;align-items:center;justify-content:space-between;">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <i class="fa-solid fa-user-shield" style="color:var(--accent);"></i>
+      <span>Driver Face</span>
+    </div>
+    <span class="pill pill-online" style="font-size:10px;padding:2px 8px;">
+      <span class="pill-dot"></span>Active Capture
+    </span>
+  </div>
+  
+  <div class="panel-body">
+    <!-- Main Captured Driver Face Display -->
+    <div style="display:flex;gap:12px;align-items:center;background:var(--bg-app-deep);border:1px solid var(--border);border-radius:var(--radius-lg);padding:10px;margin-bottom:11px;">
+      <div style="position:relative;width:72px;height:72px;border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--accent);flex-shrink:0;">
+        <img [src]="selectedRecord.imageUrl" [alt]="selectedRecord.name" style="width:100%;height:100%;object-fit:cover;display:block;"/>
+        <span style="position:absolute;bottom:0;left:0;right:0;background:rgba(3,7,18,0.85);font-family:var(--font-mono);font-size:8px;color:var(--accent);text-align:center;padding:2px 0;">CABIN CAM</span>
+      </div>
+      
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">
+          <span style="font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+            {{ selectedRecord.name }}
+          </span>
+        </div>
+        
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-faint);margin-bottom:6px;">
+          ID: <span style="color:var(--text-muted);">{{ selectedRecord.id }}</span> · {{ selectedRecord.timestamp }}
+        </div>
+        
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span [ngClass]="{
+            'status-tag-success': selectedRecord.status === 'matched',
+            'status-tag-warning': selectedRecord.status === 'unidentified',
+            'status-tag-danger': selectedRecord.status === 'watchlist_flag'
+          }" style="font-family:var(--font-mono);font-size:10px;font-weight:600;border-radius:var(--radius-full);padding:1px 8px;display:inline-flex;align-items:center;gap:4px;">
+            <i class="fa-solid" [ngClass]="{
+              'fa-circle-check': selectedRecord.status === 'matched',
+              'fa-triangle-exclamation': selectedRecord.status === 'unidentified',
+              'fa-shield-cat': selectedRecord.status === 'watchlist_flag'
+            }" style="font-size:9px;"></i>
+            {{ selectedRecord.confidence }}% {{ selectedRecord.status | uppercase }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Driver Face Captures History -->
+    <div>
+      <div style="font-family:var(--font-display);font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:7px;">
+        Captured Faces (Current Session)
+      </div>
+      <div style="display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;">
+        <div *ngFor="let rec of history" (click)="selectRecord(rec)"
+             [style.border]="selectedRecord.id === rec.id ? '1px solid var(--accent)' : '1px solid var(--border)'"
+             style="flex:0 0 54px;height:54px;border-radius:var(--radius-md);overflow:hidden;cursor:pointer;position:relative;background:var(--bg-app-deep);transition:all var(--dur-fast) var(--ease-standard);">
+          <img [src]="rec.imageUrl" [alt]="rec.name" style="width:100%;height:100%;object-fit:cover;display:block;" [style.filter]="selectedRecord.id === rec.id ? 'none' : 'grayscale(.4)'"/>
+          <span [style.background]="rec.status === 'matched' ? 'var(--status-online)' : 'var(--status-warning)'"
+                style="position:absolute;top:3px;right:3px;width:6px;height:6px;border-radius:var(--radius-full);"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

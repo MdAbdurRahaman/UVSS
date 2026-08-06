@@ -1,0 +1,22 @@
+/.claude
+/.remember
+
+# dependencies
+**/node_modules/
+
+# build artifacts
+**/dist/
+**/.angular/
+**/out-tsc/
+
+# ROS 2 / colcon
+# backend/
+backend/build/
+backend/install/
+backend/log/
+**/__pycache__/
+*.pyc
+
+# logs / os
+*.log
+.DS_Store

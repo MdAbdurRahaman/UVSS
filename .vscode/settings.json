@@ -1,0 +1,41 @@
+{
+  "ROS2.distro": "jazzy",
+  "python.autoComplete.extraPaths": [
+    "/home/mb_mishu/ros2_ws/install/yasmin_demos/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/install/yasmin_viewer/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/install/yasmin_ros/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/install/yasmin_msgs/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/install/yasmin/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/build/nucleus_driver_ros2",
+    "/home/mb_mishu/ros2_ws/install/nucleus_driver_ros2/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/build/mishu",
+    "/home/mb_mishu/ros2_ws/install/mishu/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/install/interfaces/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/install/duburi_interfaces/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/build/diver_control",
+    "/home/mb_mishu/ros2_ws/install/diver_control/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/install/custom_msgs/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/build/control_pkg",
+    "/home/mb_mishu/ros2_ws/install/control_pkg/lib/python3.12/site-packages",
+    "/opt/ros/jazzy/lib/python3.12/site-packages"
+  ],
+  "python.analysis.extraPaths": [
+    "/home/mb_mishu/ros2_ws/install/yasmin_demos/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/install/yasmin_viewer/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/install/yasmin_ros/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/install/yasmin_msgs/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/install/yasmin/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/build/nucleus_driver_ros2",
+    "/home/mb_mishu/ros2_ws/install/nucleus_driver_ros2/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/build/mishu",
+    "/home/mb_mishu/ros2_ws/install/mishu/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/install/interfaces/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/install/duburi_interfaces/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/build/diver_control",
+    "/home/mb_mishu/ros2_ws/install/diver_control/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/install/custom_msgs/lib/python3.12/site-packages",
+    "/home/mb_mishu/ros2_ws/build/control_pkg",
+    "/home/mb_mishu/ros2_ws/install/control_pkg/lib/python3.12/site-packages",
+    "/opt/ros/jazzy/lib/python3.12/site-packages"
+  ]
+}

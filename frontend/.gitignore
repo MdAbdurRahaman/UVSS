@@ -1,0 +1,13 @@
+# Dependencies
+/node_modules
+
+# Build artifacts
+/dist
+/out-tsc
+/.angular
+
+# Misc
+*.log
+.DS_Store
+/.vscode/*
+!/.vscode/extensions.json

@@ -1,0 +1,9 @@
+node_modules
+dist
+.angular
+out-tsc
+.git
+.gitignore
+*.log
+.DS_Store
+.vscode

@@ -1,0 +1,20 @@
+:host { display: block; height: 100%; }
+
+.pick-card {
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  background: var(--surface-glass);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-2xl);
+  overflow: hidden;
+  transition: border-color var(--dur-fast) var(--ease-standard),
+              box-shadow var(--dur-fast) var(--ease-standard),
+              transform var(--dur-fast) var(--ease-standard);
+}
+.pick-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}

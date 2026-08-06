@@ -1,0 +1,48 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        BUILD_CONFIG: production
+    container_name: uvss_frontend
+    restart: unless-stopped
+    networks:
+      - uvss_network
+    ports:
+      # host 4017 → container SSR server on 4000
+      - "4017:4000"
+
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: uvss_backend
+  #   restart: unless-stopped
+  #   cap_add:
+  #     - SYS_NICE
+  #     - NET_ADMIN
+  #     - SYS_PTRACE
+  #     - SYS_RESOURCE
+  #     - IPC_LOCK
+  #     - SYS_RAWIO
+  #   networks:
+  #     - uvss_network
+  #   environment:
+  #     # Single container, loopback-only DDS — no multicast needed on the bridge.
+  #     ROS_LOCALHOST_ONLY: "1"
+  #     ROS_DOMAIN_ID: "42"
+  #     RMW_IMPLEMENTATION: rmw_fastrtps_cpp
+  #     PYTHONUNBUFFERED: "1"
+  #   # No ports published yet — nothing listens inside. When the FastAPI bridge
+  #   # lands, publish it as "8017:8000" (host 8000 is taken by dubodrop_backend).
+  #   volumes:
+  #     # live-edit ROS packages on the host, rebuild inside the container
+  #     - ./backend/src:/ros2_ws/src
+  #   # DDS shared-memory transport wants more than Docker's 64m default
+  #   shm_size: "512m"
+  #   stdin_open: true
+  #   tty: true
+
+networks:
+  uvss_network:
+    driver: bridge

@@ -1,0 +1,26 @@
+:host {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.site-card {
+  display: block;
+  color: inherit;
+  background: var(--surface-glass);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: border-color var(--dur-fast) var(--ease-standard),
+              box-shadow var(--dur-fast) var(--ease-standard),
+              transform var(--dur-fast) var(--ease-standard);
+}
+.site-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.site-card.active { border-color: var(--accent); }
+.site-card.offline { opacity: .78; }

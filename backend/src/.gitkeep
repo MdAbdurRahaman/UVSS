@@ -1,0 +1,3 @@
+# ROS 2 packages live here. Create one with:
+#   docker compose exec backend bash
+#   cd /ros2_ws/src && ros2 pkg create --build-type ament_python <name>

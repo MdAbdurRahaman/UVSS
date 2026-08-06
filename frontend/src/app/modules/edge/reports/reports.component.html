@@ -1,0 +1,125 @@
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+  <div>
+    <div style="font:700 18px var(--font-display);letter-spacing:-.01em;color:var(--text);">Reports</div>
+    <div style="font:500 11.5px var(--font-sans);color:var(--text-faint);">Export lane activity for a day, a week, a month or any custom range</div>
+  </div>
+  <span style="display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);border-radius:var(--radius-full);padding:7px 15px;font:600 12px var(--font-display);color:var(--accent);"><i class="fa-solid fa-calendar-days" style="font-size:11px;"></i>{{ rangeLabel }}</span>
+</div>
+
+<!-- ── builder ── -->
+<div class="card" style="margin-bottom:16px;">
+  <div class="card-head">
+    <span>Build report</span>
+    <span style="font:500 10.5px var(--font-sans);color:var(--text-faint);">BNS Issa Khan</span>
+  </div>
+
+  <div style="padding:16px;">
+
+    <div class="field" style="margin-bottom:14px;">
+      <label>Period</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <span class="chip" [class.on]="preset === 'day'" (click)="applyPreset('day')">Today</span>
+        <span class="chip" [class.on]="preset === 'week'" (click)="applyPreset('week')">Last 7 days</span>
+        <span class="chip" [class.on]="preset === 'month'" (click)="applyPreset('month')">Last 30 days</span>
+        <span class="chip" [class.on]="preset === 'custom'" (click)="applyPreset('custom')">Custom range</span>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1.2fr 0.9fr;gap:14px;margin-bottom:16px;">
+      <div class="field">
+        <label for="rp-start">Start date</label>
+        <input id="rp-start" class="input" type="date" [(ngModel)]="start" (ngModelChange)="onDateEdited()"/>
+      </div>
+      <div class="field">
+        <label for="rp-end">End date</label>
+        <input id="rp-end" class="input" type="date" [(ngModel)]="end" (ngModelChange)="onDateEdited()"/>
+      </div>
+      <div class="field">
+        <label for="rp-kind">Report type</label>
+        <select id="rp-kind" class="input" [(ngModel)]="kind">
+          <option *ngFor="let k of kinds" [value]="k">{{ k }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="rp-format">Format</label>
+        <select id="rp-format" class="input" [(ngModel)]="format">
+          <option *ngFor="let f of formats" [value]="f">{{ f }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- live totals for whatever is currently selected -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px;">
+      <div class="kpi"><div class="kpi-label">Scans</div><div class="kpi-value" style="color:var(--text);">{{ totals.scans }}</div></div>
+      <div class="kpi"><div class="kpi-label">Blacklist hits</div><div class="kpi-value" style="color:var(--red-400);">{{ totals.blacklist }}</div></div>
+      <div class="kpi"><div class="kpi-label">Watch hits</div><div class="kpi-value" style="color:var(--yellow-500);">{{ totals.watch }}</div></div>
+      <div class="kpi"><div class="kpi-label">Halted</div><div class="kpi-value" style="color:var(--accent);">{{ totals.halted }}</div></div>
+      <div class="kpi"><div class="kpi-label">Avg risk</div><div class="kpi-value" style="color:var(--text);">{{ avgRisk }}</div></div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:14px;">
+      <button class="btn" type="button" (click)="generate()">
+        <i class="fa-solid fa-download" style="font-size:11px;margin-right:8px;"></i>Download {{ format }}
+      </button>
+      <span *ngIf="format === 'PDF'" style="font:500 11px var(--font-sans);color:var(--text-faint);">Opens the print dialog — choose “Save as PDF”.</span>
+      <span *ngIf="error" class="err">{{ error }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── preview ── -->
+<div class="card" style="margin-bottom:16px;">
+  <div class="card-head">
+    <span>Preview · {{ kind }}</span>
+    <span style="font:500 10.5px var(--font-sans);color:var(--text-faint);">{{ reportRows.length }} row{{ reportRows.length === 1 ? '' : 's' }}</span>
+  </div>
+
+  <div class="trow trow-head">
+    <span>Date</span><span>Scans</span><span>Cleared</span><span>Watch</span><span>Blacklist</span><span>Halted</span><span>Avg risk</span>
+  </div>
+
+  <div style="max-height:320px;overflow-y:auto;">
+    <div *ngFor="let r of reportRows" class="trow" style="border-bottom:1px solid var(--border);">
+      <span>{{ r.date }}</span>
+      <span>{{ r.scans }}</span>
+      <span>{{ r.cleared }}</span>
+      <span [style.color]="r.watch ? 'var(--yellow-500)' : 'var(--text-faint)'">{{ r.watch }}</span>
+      <span [style.color]="r.blacklist ? 'var(--red-400)' : 'var(--text-faint)'">{{ r.blacklist }}</span>
+      <span>{{ r.halted }}</span>
+      <span>{{ r.avgRisk }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="reportRows.length" class="trow trow-total">
+    <span>Total</span>
+    <span>{{ totals.scans }}</span>
+    <span>{{ totals.cleared }}</span>
+    <span>{{ totals.watch }}</span>
+    <span>{{ totals.blacklist }}</span>
+    <span>{{ totals.halted }}</span>
+    <span>{{ avgRisk }}</span>
+  </div>
+
+  <div *ngIf="!reportRows.length" style="padding:26px 16px;text-align:center;font:500 12px var(--font-sans);color:var(--text-faint);">
+    Nothing to report for this range and type.
+  </div>
+</div>
+
+<!-- ── recent exports ── -->
+<div class="card" *ngIf="recent.length">
+  <div class="card-head"><span>Generated this session</span></div>
+  <div *ngFor="let r of recent; let last = last"
+       [style.borderBottom]="last ? 'none' : '1px solid var(--border)'"
+       style="display:grid;grid-template-columns:2.4fr 1fr 1.4fr 0.8fr 1fr;gap:10px;padding:12px 16px;align-items:center;">
+    <span style="font:500 11.5px var(--font-mono);color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ r.name }}</span>
+    <span style="font:700 10px var(--font-display);color:var(--accent);text-transform:uppercase;letter-spacing:.05em;">{{ r.format }}</span>
+    <span style="font:500 11px var(--font-mono);color:var(--text-muted);">{{ r.range }}</span>
+    <span style="font:500 11px var(--font-sans);color:var(--text-muted);">{{ r.rows }} rows</span>
+    <span style="font:500 10.5px var(--font-mono);color:var(--text-faint);text-align:right;">{{ r.generatedAt | date:'dd MMM · HH:mm' }}</span>
+  </div>
+</div>
+
+<div style="display:flex;align-items:center;gap:9px;margin-top:16px;padding:12px 14px;background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:10px;">
+  <i class="fa-solid fa-circle-info" style="font-size:14px;color:var(--accent);"></i>
+  <span style="font:400 11.5px/1.4 var(--font-sans);color:var(--text-muted);">Reports cover this edge only. CSV and JSON download straight to your machine; PDF renders through the browser print dialog.</span>
+</div>

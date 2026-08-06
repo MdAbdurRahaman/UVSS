@@ -1,0 +1,88 @@
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+  <div>
+    <div style="font:700 18px var(--font-display);letter-spacing:-.01em;color:var(--text);">System</div>
+    <div style="font:500 11.5px var(--font-sans);color:var(--text-faint);">Health of every component on this edge · BNS Issa Khan</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span [style.color]="statusText(overall)" style="display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);border-radius:var(--radius-full);padding:7px 15px;font:600 12px var(--font-display);">
+      <span [style.background]="statusColor(overall)" style="width:7px;height:7px;border-radius:var(--radius-full);"></span>{{ overallLabel() }}
+    </span>
+    <button class="btn" type="button" (click)="runCheck()" [disabled]="checking">
+      <i class="fa-solid" [ngClass]="checking ? 'fa-spinner' : 'fa-rotate'" style="font-size:11px;margin-right:7px;"></i>{{ checking ? 'Checking…' : 'Run health check' }}
+    </button>
+  </div>
+</div>
+
+<!-- ── summary ── -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+  <div class="kpi">
+    <div class="kpi-label">Healthy</div>
+    <div class="kpi-value" style="color:var(--green-400);">{{ healthyCount }}<span style="font:600 14px var(--font-display);color:var(--text-faint);"> / {{ totalCount }}</span></div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Degraded</div>
+    <div class="kpi-value" style="color:var(--yellow-500);">{{ degradedCount }}</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Offline</div>
+    <div class="kpi-value" style="color:var(--red-400);">{{ offlineCount }}</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-label">Enabled components</div>
+    <div class="kpi-value" style="color:var(--accent);">{{ enabledCount }}<span style="font:600 14px var(--font-display);color:var(--text-faint);"> / {{ totalCount }}</span></div>
+  </div>
+</div>
+
+<!-- ── one card per subsystem ── -->
+<div style="display:flex;flex-direction:column;gap:16px;">
+  <div *ngFor="let group of groups" class="card">
+    <div class="card-head">
+      <i class="fa-solid" [ngClass]="group.icon" style="font-size:12px;color:var(--accent);"></i>
+      <span>{{ group.title }}</span>
+      <span style="font:500 10.5px var(--font-sans);color:var(--text-faint);">{{ group.items.length }} components</span>
+    </div>
+
+    <div class="row row-head">
+      <span>Component</span><span>Status</span><span>Reading</span><span style="text-align:right;">Uptime</span><span>Last check</span><span></span>
+    </div>
+
+    <div *ngFor="let item of group.items; let last = last"
+         class="row"
+         [style.borderBottom]="last ? 'none' : '1px solid var(--border)'"
+         [style.borderLeft]="'3px solid ' + (item.on ? statusColor(item.health) : 'transparent')"
+         [style.opacity]="item.on ? 1 : .6">
+
+      <div style="min-width:0;">
+        <div style="font:600 12.5px var(--font-sans);color:var(--text);">{{ item.label }}</div>
+        <div style="font:500 10.5px var(--font-sans);color:var(--text-faint);">{{ item.desc }}</div>
+      </div>
+
+      <span [style.color]="statusText(item.health)" style="display:inline-flex;align-items:center;gap:7px;font:700 11px var(--font-display);">
+        <i class="fa-solid" [ngClass]="statusIcon(item.health)" style="font-size:11px;"></i>{{ statusLabel(item.health) }}
+      </span>
+
+      <span style="font:500 11px var(--font-mono);color:var(--text-muted);font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ item.metric }}</span>
+
+      <span [style.color]="item.uptime >= 99 ? 'var(--text)' : 'var(--yellow-500)'" style="text-align:right;font:600 11.5px var(--font-mono);font-variant-numeric:tabular-nums;">{{ item.on ? (item.uptime | number:'1.1-1') + '%' : '—' }}</span>
+
+      <span style="font:500 10.5px var(--font-mono);color:var(--text-faint);">{{ lastCheckLabel(item) }}</span>
+
+      <span (click)="toggle(item)" [style.background]="item.on ? 'var(--brand)' : 'var(--gray-600)'"
+            [title]="item.on ? 'Disable component' : 'Enable component'"
+            style="width:42px;height:24px;border-radius:var(--radius-full);position:relative;cursor:pointer;flex:0 0 auto;justify-self:end;transition:background var(--dur-fast) var(--ease-standard);">
+        <span [style.left]="item.on ? '21px' : '3px'" style="position:absolute;top:3px;width:18px;height:18px;border-radius:var(--radius-full);background:var(--surface);transition:left var(--dur-fast) var(--ease-standard);"></span>
+      </span>
+
+      <!-- fault detail spans the full row width when something is wrong -->
+      <div *ngIf="item.note" style="grid-column:1 / -1;display:flex;align-items:center;gap:8px;margin-top:2px;padding:7px 10px;background:var(--bg-app);border:1px solid var(--border);border-radius:var(--radius-md);">
+        <i class="fa-solid fa-circle-info" [style.color]="statusText(item.health)" style="font-size:11px;"></i>
+        <span style="font:400 11px/1.35 var(--font-sans);color:var(--text-muted);">{{ item.note }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="display:flex;align-items:center;gap:9px;margin-top:16px;padding:12px 14px;background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:10px;">
+  <i class="fa-solid fa-circle-info" style="font-size:14px;color:var(--accent);"></i>
+  <span style="font:400 11.5px/1.4 var(--font-sans);color:var(--text-muted);">Disabling a capture or sensor stops it feeding the scan pipeline and reports it offline here. Changes apply to the next vehicle in the pit.</span>
+</div>

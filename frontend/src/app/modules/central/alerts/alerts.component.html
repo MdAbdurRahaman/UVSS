@@ -1,0 +1,87 @@
+<header style="flex:0 0 auto;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:var(--surface-glass);backdrop-filter:var(--glass-blur);border-bottom:1px solid var(--border);">
+  <div>
+    <div style="display:flex;align-items:center;gap:9px;"><span style="font:700 18px var(--font-display);letter-spacing:-.01em;color:var(--text);">Alerts</span><span style="width:8px;height:8px;border-radius:var(--radius-full);background:var(--status-danger);animation:pulse 1.4s infinite;"></span></div>
+    <div style="font:500 11.5px var(--font-sans);color:var(--text-faint);">Blacklist &amp; watch hits across all sites · dispatched via SMS / email</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span style="display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);border-radius:var(--radius-full);padding:7px 14px;font:500 12px var(--font-sans);color:var(--text);">Last 24 hours <i class="fa-solid fa-chevron-down" style="font-size:9px;color:var(--text-faint);"></i></span>
+    <span style="display:inline-flex;align-items:center;border-radius:var(--radius-full);padding:8px 16px;font:600 12px var(--font-display);color:var(--white);background:var(--brand);cursor:pointer;">Export</span>
+  </div>
+</header>
+
+<div style="flex:1 1 auto;overflow-y:auto;padding:18px 22px 22px;">
+  <!-- KPI -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+    <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:15px;"><div style="font:500 11px var(--font-sans);color:var(--text-faint);margin-bottom:8px;">Open alerts</div><div style="font:700 28px var(--font-display);color:var(--red-400);">3</div></div>
+    <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:15px;"><div style="font:500 11px var(--font-sans);color:var(--text-faint);margin-bottom:8px;">Blacklist (24h)</div><div style="font:700 28px var(--font-display);color:var(--accent);">7</div></div>
+    <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:15px;"><div style="font:500 11px var(--font-sans);color:var(--text-faint);margin-bottom:8px;">Watch (24h)</div><div style="font:700 28px var(--font-display);color:var(--accent);">11</div></div>
+    <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:15px;"><div style="font:500 11px var(--font-sans);color:var(--text-faint);margin-bottom:8px;">Dispatched</div><div style="font:700 28px var(--font-display);color:var(--accent);">27</div></div>
+  </div>
+
+  <!-- filter chips -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+    <span style="font:600 12px var(--font-display);color:var(--white);background:var(--brand);border-radius:var(--radius-full);padding:7px 15px;cursor:pointer;">All</span>
+    <span style="font:500 12px var(--font-display);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-full);padding:7px 15px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:var(--radius-full);background:var(--status-danger);"></span>Blacklist</span>
+    <span style="font:500 12px var(--font-display);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-full);padding:7px 15px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:var(--radius-full);background:var(--gray-600);"></span>Watch</span>
+    <span style="font:500 12px var(--font-display);color:var(--text-muted);border:1px solid var(--border);border-radius:var(--radius-full);padding:7px 15px;cursor:pointer;">Open</span>
+    <span style="font:500 12px var(--font-display);color:var(--text-muted);border:1px solid var(--border);border-radius:var(--radius-full);padding:7px 15px;cursor:pointer;">Resolved</span>
+  </div>
+
+  <!-- alerts table -->
+  <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;">
+    <div style="display:grid;grid-template-columns:56px 1fr 1.1fr 1.3fr 0.8fr 0.7fr 0.9fr 86px;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);font:600 9.5px var(--font-display);letter-spacing:.05em;text-transform:uppercase;color:var(--text-faint);background:var(--bg-app);align-items:center;">
+      <span></span><span>Type</span><span>Site</span><span>Plate</span><span>Scan</span><span style="text-align:right;">Risk</span><span>Status</span><span></span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:56px 1fr 1.1fr 1.3fr 0.8fr 0.7fr 0.9fr 86px;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);border-left:3px solid var(--status-danger);align-items:center;">
+      <img src="assets/plate.jpg" alt="plate" style="width:56px;height:24px;object-fit:cover;border-radius:4px;border:1px solid var(--border);"/>
+      <span style="font:700 10.5px var(--font-display);color:var(--red-400);text-transform:uppercase;letter-spacing:.04em;">Blacklist</span>
+      <span style="font:500 12px var(--font-sans);color:var(--text);">BNS Issa Khan</span>
+      <span style="font:500 12px var(--font-mono);color:var(--text);">DL 3C AD 8491</span>
+      <span style="font:500 11px var(--font-mono);color:var(--text-muted);">#A-2291</span>
+      <span style="text-align:right;font:700 11px var(--font-display);color:var(--white);background:var(--status-danger);border-radius:var(--radius-full);padding:1px 7px;justify-self:end;">84</span>
+      <span style="font:500 11px var(--font-sans);color:var(--red-400);">Open · 14:32</span>
+      <a routerLink="/central/review" style="font:600 10.5px var(--font-display);color:var(--white);background:var(--brand);border-radius:var(--radius-full);padding:5px 0;text-align:center;cursor:pointer;">Review</a>
+    </div>
+    <div style="display:grid;grid-template-columns:56px 1fr 1.1fr 1.3fr 0.8fr 0.7fr 0.9fr 86px;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);border-left:3px solid var(--status-danger);align-items:center;">
+      <div style="width:56px;height:24px;border-radius:4px;background:url('assets/undercarriage.jpg') 40% 50%/200% no-repeat;border:1px solid var(--border);"></div>
+      <span style="font:700 10.5px var(--font-display);color:var(--red-400);text-transform:uppercase;letter-spacing:.04em;">Blacklist</span>
+      <span style="font:500 12px var(--font-sans);color:var(--text);">Mongla Port</span>
+      <span style="font:500 12px var(--font-mono);color:var(--text);">DHA GA 09-7733</span>
+      <span style="font:500 11px var(--font-mono);color:var(--text-muted);">#C-0884</span>
+      <span style="text-align:right;font:700 11px var(--font-display);color:var(--white);background:var(--status-danger);border-radius:var(--radius-full);padding:1px 7px;justify-self:end;">71</span>
+      <span style="font:500 11px var(--font-sans);color:var(--red-400);">Open · 14:19</span>
+      <a routerLink="/central/review" style="font:600 10.5px var(--font-display);color:var(--white);background:var(--brand);border-radius:var(--radius-full);padding:5px 0;text-align:center;cursor:pointer;">Review</a>
+    </div>
+    <div style="display:grid;grid-template-columns:56px 1fr 1.1fr 1.3fr 0.8fr 0.7fr 0.9fr 86px;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);border-left:3px solid var(--gray-600);align-items:center;">
+      <div style="width:56px;height:24px;border-radius:4px;background:url('assets/undercarriage.jpg') 20% 70%/220% no-repeat;border:1px solid var(--border);filter:grayscale(.3);"></div>
+      <span style="font:700 10.5px var(--font-display);color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;">Watch</span>
+      <span style="font:500 12px var(--font-sans);color:var(--text);">Benapole Port</span>
+      <span style="font:500 12px var(--font-mono);color:var(--text);">CTG HA 21-4410</span>
+      <span style="font:500 11px var(--font-mono);color:var(--text-muted);">#E-0455</span>
+      <span style="text-align:right;font:700 11px var(--font-display);color:var(--text);background:var(--surface-raised);border-radius:var(--radius-full);padding:1px 7px;justify-self:end;">38</span>
+      <span style="font:500 11px var(--font-sans);color:var(--text-muted);">Open · 13:58</span>
+      <a routerLink="/central/review" style="font:600 10.5px var(--font-display);color:var(--accent);border:1px solid var(--border);border-radius:var(--radius-full);padding:5px 0;text-align:center;cursor:pointer;">Review</a>
+    </div>
+    <div style="display:grid;grid-template-columns:56px 1fr 1.1fr 1.3fr 0.8fr 0.7fr 0.9fr 86px;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);border-left:3px solid transparent;align-items:center;opacity:.7;">
+      <div style="width:56px;height:24px;border-radius:4px;background:url('assets/undercarriage.jpg') 60% 40%/200% no-repeat;border:1px solid var(--border);filter:grayscale(.3);"></div>
+      <span style="font:700 10.5px var(--font-display);color:var(--red-400);text-transform:uppercase;letter-spacing:.04em;">Blacklist</span>
+      <span style="font:500 12px var(--font-sans);color:var(--text);">BNS Issa Khan</span>
+      <span style="font:500 12px var(--font-mono);color:var(--text);">DL 3C AD 8491</span>
+      <span style="font:500 11px var(--font-mono);color:var(--text-muted);">#A-1190</span>
+      <span style="text-align:right;font:700 11px var(--font-display);color:var(--text-muted);background:var(--surface-raised);border-radius:var(--radius-full);padding:1px 7px;justify-self:end;">79</span>
+      <span style="font:500 11px var(--font-sans);color:var(--text-muted);">Resolved · 12 Jun</span>
+      <a routerLink="/central/review" style="font:600 10.5px var(--font-display);color:var(--text-faint);border:1px solid var(--border);border-radius:var(--radius-full);padding:5px 0;text-align:center;cursor:pointer;">View</a>
+    </div>
+    <div style="display:grid;grid-template-columns:56px 1fr 1.1fr 1.3fr 0.8fr 0.7fr 0.9fr 86px;gap:10px;padding:11px 16px;border-left:3px solid transparent;align-items:center;opacity:.7;">
+      <div style="width:56px;height:24px;border-radius:4px;background:url('assets/undercarriage.jpg') 80% 60%/220% no-repeat;border:1px solid var(--border);filter:grayscale(.3);"></div>
+      <span style="font:700 10.5px var(--font-display);color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;">Watch</span>
+      <span style="font:500 12px var(--font-sans);color:var(--text);">Teknaf Port</span>
+      <span style="font:500 12px var(--font-mono);color:var(--text);">SYL KHA 55-2017</span>
+      <span style="font:500 11px var(--font-mono);color:var(--text-muted);">#F-3320</span>
+      <span style="text-align:right;font:700 11px var(--font-display);color:var(--text-muted);background:var(--surface-raised);border-radius:var(--radius-full);padding:1px 7px;justify-self:end;">26</span>
+      <span style="font:500 11px var(--font-sans);color:var(--text-muted);">Resolved · 11 Jun</span>
+      <a routerLink="/central/review" style="font:600 10.5px var(--font-display);color:var(--text-faint);border:1px solid var(--border);border-radius:var(--radius-full);padding:5px 0;text-align:center;cursor:pointer;">View</a>
+    </div>
+  </div>
+</div>

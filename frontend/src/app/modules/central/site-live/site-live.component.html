@@ -1,0 +1,102 @@
+<header style="flex:0 0 auto;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:var(--surface-glass);backdrop-filter:var(--glass-blur);border-bottom:1px solid var(--border);">
+  <div style="display:flex;align-items:center;gap:14px;">
+    <a routerLink="/central/sites" style="display:inline-flex;align-items:center;gap:6px;font:500 12px var(--font-sans);color:var(--text-muted);">← Sites</a>
+    <div style="width:1px;height:24px;background:var(--border);"></div>
+    <div>
+      <div style="font:700 18px var(--font-display);letter-spacing:-.01em;color:var(--text);">Site {{ cur.id }} · {{ cur.name }}</div>
+      <div style="font:500 11.5px var(--font-sans);color:var(--text-faint);">Live mirror from the edge · read-only · last sync {{ cur.lastSync }}</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <span style="display:inline-flex;align-items:center;gap:7px;border-radius:var(--radius-full);padding:6px 14px;background:var(--brand);">
+      <span [style.background]="statusColor" [style.animation]="cur.status === 'scanning' ? 'pulse 1.4s infinite' : 'none'" style="width:7px;height:7px;border-radius:var(--radius-full);"></span>
+      <span style="font:600 12px var(--font-display);color:var(--white);">{{ statusLabel }}</span>
+    </span>
+    <div style="display:flex;align-items:center;gap:7px;">
+      <i class="fa-solid fa-lock" [style.color]="cur.tunnel === 'Up' ? 'var(--status-online)' : 'var(--status-danger)'" style="font-size:12px;"></i>
+      <span [style.color]="cur.tunnel === 'Up' ? 'var(--status-online)' : 'var(--status-danger)'" style="font:500 11.5px var(--font-sans);">Tunnel {{ cur.tunnel }}</span>
+    </div>
+  </div>
+</header>
+
+<div style="flex:1 1 auto;overflow-y:auto;padding:18px 22px 22px;">
+
+  <!-- KPI strip -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+    <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:14px;"><div style="font:500 11px var(--font-sans);color:var(--text-faint);margin-bottom:7px;">Scans today</div><div style="font:700 24px var(--font-display);color:var(--accent);">{{ cur.scansToday }}</div></div>
+    <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:14px;"><div style="font:500 11px var(--font-sans);color:var(--text-faint);margin-bottom:7px;">Avg risk</div><div style="font:700 24px var(--font-display);color:var(--accent);">{{ cur.avgRisk }}</div></div>
+    <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:14px;"><div style="font:500 11px var(--font-sans);color:var(--text-faint);margin-bottom:7px;">Open alerts</div><div [style.color]="cur.alerts ? 'var(--red-400)' : 'var(--accent)'" style="font:700 24px var(--font-display);">{{ cur.alerts }}</div></div>
+    <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:14px;"><div style="font:500 11px var(--font-sans);color:var(--text-faint);margin-bottom:7px;">Vehicle speed</div><div style="font:700 24px var(--font-display);color:var(--text);">{{ cur.speed }}</div></div>
+  </div>
+
+  <!-- SCANNING: live view -->
+  <div *ngIf="cur.status === 'scanning'" style="display:flex;gap:16px;align-items:flex-start;">
+    <section style="flex:1 1 auto;display:flex;flex-direction:column;gap:14px;min-width:0;">
+      <!-- live composite -->
+      <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow-2xl);overflow:hidden;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--border);">
+          <span style="display:inline-flex;align-items:center;gap:7px;font:600 12px var(--font-display);color:var(--text);"><span style="width:7px;height:7px;border-radius:var(--radius-full);background:var(--status-danger);animation:pulse 1.4s infinite;"></span>Live stitched composite</span>
+          <span style="font:500 11px var(--font-mono);color:var(--text-muted);">{{ cur.scan }}</span>
+        </div>
+        <div style="position:relative;height:320px;background:var(--bg-app-deep);overflow:hidden;">
+          <img src="assets/undercarriage.jpg" alt="live undercarriage" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);"/>
+          <div style="position:absolute;top:0;bottom:0;width:46px;background:linear-gradient(90deg,transparent,rgba(34,211,238,.12),rgba(34,211,238,.5),transparent);animation:sweeph 3.4s linear infinite;"></div>
+          <div style="position:absolute;left:39%;top:40%;width:20%;height:22%;border:2px solid var(--status-danger);border-radius:var(--radius-sm);"><span style="position:absolute;top:-23px;left:-1px;background:var(--status-danger);color:var(--white);font-family:var(--font-mono);font-size:10px;font-weight:600;padding:2px 7px;border-radius:var(--radius-sm);white-space:nowrap;">THREAT · foreign object 0.91</span></div>
+          <div style="position:absolute;right:13%;top:34%;width:13%;height:26%;border:2px dashed var(--status-danger);border-radius:var(--radius-sm);"><span style="position:absolute;bottom:-21px;right:-1px;background:rgba(3,7,18,.82);color:var(--red-400);font-family:var(--font-mono);font-size:10px;padding:2px 7px;border-radius:var(--radius-sm);white-space:nowrap;">Anomaly region</span></div>
+          <div style="position:absolute;left:12px;top:12px;display:flex;align-items:center;gap:7px;background:rgba(3,7,18,.7);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-full);padding:5px 11px;"><span style="width:6px;height:6px;border-radius:var(--radius-full);background:var(--status-online);animation:pulse 1.4s infinite;"></span><span style="font-family:var(--font-mono);font-size:10px;color:var(--white);letter-spacing:.04em;">CAPTURING · {{ cur.name }}</span></div>
+          <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:9px;background:rgba(3,7,18,.72);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-full);padding:5px 13px;"><span style="font-family:var(--font-display);font-weight:var(--fw-bold);font-size:10px;color:var(--white);letter-spacing:.1em;">FRONT</span><svg width="54" height="8" viewBox="0 0 54 8" fill="none"><path d="M0 4h48M44 1l5 3-5 3" stroke="#22d3ee" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-family:var(--font-display);font-weight:var(--fw-bold);font-size:10px;color:rgba(255,255,255,.75);letter-spacing:.1em;">REAR</span></div>
+        </div>
+      </div>
+      <!-- cameras -->
+      <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:12px;">
+        <div style="font:600 11px var(--font-display);letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);margin-bottom:9px;">Vehicle cameras · live</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+          <div style="border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--bg-app-deep);position:relative;"><img src="assets/vehicle-front.jpg" alt="ANPR front" style="width:100%;height:70px;object-fit:cover;display:block;"/><span class="cam-tag">ANPR · F</span></div>
+          <div style="border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--bg-app-deep);position:relative;"><img src="assets/vehicle-rear2.jpg" alt="ANPR rear" style="width:100%;height:70px;object-fit:cover;display:block;"/><span class="cam-tag">ANPR · R</span></div>
+          <div style="border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--bg-app-deep);position:relative;"><img src="assets/side-base-left.jpg" alt="side left" style="width:100%;height:70px;object-fit:cover;display:block;"/><span class="cam-tag">SIDE · L</span></div>
+          <div style="border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;background:var(--bg-app-deep);position:relative;"><img src="assets/side-base-right.jpg" alt="side right" style="width:100%;height:70px;object-fit:cover;display:block;"/><span class="cam-tag">SIDE · R</span></div>
+        </div>
+      </div>
+    </section>
+
+    <aside style="flex:0 0 340px;display:flex;flex-direction:column;gap:14px;">
+      <!-- plate -->
+      <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:14px;">
+        <div style="font:600 11px var(--font-display);letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">Number plate · ANPR</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font:600 16px var(--font-mono);color:var(--text);letter-spacing:.04em;">{{ cur.plate }}</span>
+          <span style="font:700 10.5px var(--font-display);color:var(--white);background:var(--status-danger);border-radius:var(--radius-full);padding:3px 10px;text-transform:uppercase;letter-spacing:.04em;">{{ cur.verdict }}</span>
+        </div>
+      </div>
+      <!-- risk -->
+      <div style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:14px;">
+        <div style="font:600 11px var(--font-display);letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;">Risk score</div>
+        <div style="display:flex;align-items:flex-end;gap:12px;margin-bottom:10px;">
+          <span [style.color]="riskColor" style="font-family:var(--font-mono);font-size:50px;font-weight:700;line-height:.9;font-variant-numeric:tabular-nums;">{{ cur.risk }}</span>
+          <div style="padding-bottom:5px;"><div [style.color]="riskColor" style="font:700 14px var(--font-display);">{{ cur.band }}</div><div style="font:500 11.5px var(--font-sans);color:var(--text-muted);">/ 100</div></div>
+        </div>
+        <div style="height:6px;border-radius:var(--radius-full);background:var(--surface-raised);overflow:hidden;"><div [style.width.%]="cur.risk" [style.background]="riskColor" style="height:100%;border-radius:var(--radius-full);"></div></div>
+      </div>
+      <!-- operator status (read-only) -->
+      <div style="background:var(--brand);border-radius:var(--radius-xl);padding:14px;">
+        <div style="font:600 11px var(--font-display);letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.62);margin-bottom:8px;">Operator decision</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="width:8px;height:8px;border-radius:var(--radius-full);background:var(--status-online);animation:pulse 1.4s infinite;"></span><span style="font:700 15px var(--font-display);color:var(--white);">Awaiting call at site</span></div>
+        <div style="font:400 11.5px/1.5 var(--font-sans);color:rgba(255,255,255,.55);">Central monitors live. The halt / pass decision is made by the operator on the edge console.</div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- IDLE -->
+  <div *ngIf="cur.status === 'idle'" style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:48px 24px;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <i class="fa-solid fa-circle-check" style="font-size:38px;color:var(--status-online);"></i>
+    <div style="font:700 16px var(--font-display);color:var(--text);margin:14px 0 5px;">Pit clear — no vehicle scanning</div>
+    <div style="font:500 12.5px var(--font-sans);color:var(--text-muted);max-width:360px;">{{ cur.name }} is online and idle. The live composite appears here the moment a vehicle enters the pit.</div>
+  </div>
+
+  <!-- OFFLINE -->
+  <div *ngIf="cur.status === 'offline'" style="background:var(--surface-glass);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-xl);padding:48px 24px;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <i class="fa-solid fa-triangle-exclamation" style="font-size:38px;color:var(--status-danger);"></i>
+    <div style="font:700 16px var(--font-display);color:var(--text);margin:14px 0 5px;">Tunnel down — last sync {{ cur.lastSync }}</div>
+    <div style="font:500 12.5px var(--font-sans);color:var(--text-muted);max-width:380px;">No live feed from {{ cur.name }}. Scans captured while offline will sync to central when the encrypted tunnel is restored.</div>
+  </div>
+</div>

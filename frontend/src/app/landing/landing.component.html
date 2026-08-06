@@ -1,0 +1,52 @@
+<div style="min-height:100vh;background:var(--bg-app);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;position:relative;overflow:hidden;">
+  <span class="chrome-btn" (click)="theme.toggle()" [title]="theme.toggleLabel" style="position:absolute;top:22px;right:22px;"><i class="fa-solid" [ngClass]="theme.toggleIcon"></i></span>
+
+  <!-- brand -->
+  <div style="position:relative;display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+    <svg width="40" height="40" viewBox="0 0 26 26" fill="none"><rect x="1" y="1" width="24" height="24" rx="7" fill="var(--brand)"/><path d="M7 9h12M7 13h12" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><path d="M8 17l5 3 5-3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div style="display:flex;flex-direction:column;line-height:1.05;">
+      <span style="font:700 22px var(--font-display);color:var(--text);letter-spacing:-.01em;">UVSS</span>
+      <span style="font:500 10px var(--font-display);color:var(--text-faint);letter-spacing:.08em;text-transform:uppercase;">Dubotech · Under Vehicle Surveillance</span>
+    </div>
+  </div>
+  <div style="position:relative;font:400 13px var(--font-sans);color:var(--text-muted);margin-bottom:34px;text-align:center;">Choose a dashboard to sign in to. Each requires its own authentication.</div>
+
+  <!-- chooser -->
+  <div style="position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,300px));gap:20px;width:100%;max-width:640px;">
+
+    <!-- EDGE -->
+    <a class="pick-card" routerLink="/edge/console">
+      <div style="height:130px;background:url('assets/undercarriage.jpg') center/cover no-repeat;position:relative;">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,43,82,.15),rgba(13,43,82,.78));"></div>
+        <span style="position:absolute;top:12px;left:12px;display:flex;align-items:center;gap:6px;background:rgba(3,7,18,.72);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-full);padding:4px 11px;font:600 10px var(--font-display);color:var(--white);letter-spacing:.05em;text-transform:uppercase;">Single site</span>
+      </div>
+      <div style="padding:18px;">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
+          <i class="fa-solid fa-circle-dot" style="font-size:17px;color:var(--accent);"></i>
+          <span style="font:700 17px var(--font-display);color:var(--text);">Edge console</span>
+        </div>
+        <div style="font:400 12.5px/1.55 var(--font-sans);color:var(--text-muted);margin-bottom:16px;">Operator view at the scanning site — live stitched undercarriage, AI threat assist, ANPR, and the halt / pass decision.</div>
+        <span style="display:inline-flex;align-items:center;gap:7px;font:600 12.5px var(--font-display);color:var(--white);background:var(--brand);border-radius:var(--radius-full);padding:9px 16px;">Open Edge console <i class="fa-solid fa-arrow-right" style="font-size:11px;"></i></span>
+      </div>
+    </a>
+
+    <!-- CENTRAL -->
+    <a class="pick-card" routerLink="/central/command">
+      <div style="height:130px;background:var(--brand);position:relative;overflow:hidden;">
+        <img src="assets/undercarriage.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.18;mix-blend-mode:luminosity;"/>
+        <span style="position:absolute;top:12px;left:12px;display:flex;align-items:center;gap:6px;background:rgba(3,7,18,.72);backdrop-filter:var(--glass-blur);border:1px solid var(--border);border-radius:var(--radius-full);padding:4px 11px;font:600 10px var(--font-display);color:var(--white);letter-spacing:.05em;text-transform:uppercase;">6 sites</span>
+        <i class="fa-solid fa-tower-broadcast" style="position:absolute;right:16px;bottom:14px;font-size:30px;color:rgba(255,255,255,.75);"></i>
+      </div>
+      <div style="padding:18px;">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">
+          <i class="fa-solid fa-gauge-high" style="font-size:17px;color:var(--accent);"></i>
+          <span style="font:700 17px var(--font-display);color:var(--text);">Central command</span>
+        </div>
+        <div style="font:400 12.5px/1.55 var(--font-sans);color:var(--text-muted);margin-bottom:16px;">Multi-site supervisor view — fleet overview, live alerts, watchlist, reports and the analyst review queue.</div>
+        <span style="display:inline-flex;align-items:center;gap:7px;font:600 12.5px var(--font-display);color:var(--white);background:var(--brand);border-radius:var(--radius-full);padding:9px 16px;">Open Central command <i class="fa-solid fa-arrow-right" style="font-size:11px;"></i></span>
+      </div>
+    </a>
+  </div>
+
+  <div style="position:relative;margin-top:30px;font:500 11px var(--font-mono);color:var(--text-faint);">TLS 1.3 · mTLS · MFA · RBAC</div>
+</div>

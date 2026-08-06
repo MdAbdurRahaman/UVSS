@@ -1,0 +1,28 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${workspaceFolder}/.vscode/browse.vc.db",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/mb_mishu/ros2_ws/install/yasmin_demos/include/**",
+        "/home/mb_mishu/ros2_ws/install/yasmin_viewer/include/**",
+        "/home/mb_mishu/ros2_ws/install/yasmin_ros/include/**",
+        "/home/mb_mishu/ros2_ws/install/yasmin_msgs/include/**",
+        "/home/mb_mishu/ros2_ws/install/yasmin/include/**",
+        "/home/mb_mishu/ros2_ws/install/interfaces/include/**",
+        "/home/mb_mishu/ros2_ws/install/duburi_interfaces/include/**",
+        "/home/mb_mishu/ros2_ws/install/custom_msgs/include/**",
+        "/opt/ros/jazzy/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ros2",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++17"
+    }
+  ],
+  "version": 4
+}
