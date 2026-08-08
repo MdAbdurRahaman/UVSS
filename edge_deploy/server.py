@@ -766,8 +766,8 @@ def parse_args() -> argparse.Namespace:
                    help="'person', 'Vehicles', 'all', or comma-separated names")
     p.add_argument("--conf", type=float, default=0.35)
     p.add_argument("--iou", type=float, default=0.45)
-    p.add_argument("--top-k", type=int, default=5,
-                   help="best images kept per subject")
+    p.add_argument("--top-k", type=int, default=1,
+                   help="best images kept per subject (1 best face crop + full frame)")
     p.add_argument("--width", type=int, default=1280)
     p.add_argument("--height", type=int, default=720)
     p.add_argument("--cors-origins", default="*",

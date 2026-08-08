@@ -284,7 +284,7 @@ class BestImageGallery:
             load_inference_config().get("quality", {})
 
         self.top_k = int(top_k if top_k is not None
-                         else cfg.get("top_k_per_track", 5))
+                         else cfg.get("top_k_per_track", 1))
         self.weights = dict(weights if weights is not None
                             else cfg.get("weights", {}))
         self.min_face_px = int(min_face_px if min_face_px is not None

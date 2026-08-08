@@ -20,3 +20,9 @@ backend/log/
 # logs / os
 *.log
 .DS_Store
+
+# edge deploy sessions & test videos
+edge_deploy/sessions/
+edge_deploy/web_sessions/
+edge_deploy/*.mp4
+edge_deploy/best_images/

@@ -77,10 +77,10 @@
 
       <!-- LIVE VIDEO -->
       <div [style.display]="view === 'live' ? 'block' : 'none'" style="position:absolute;inset:0;">
-        <img src="assets/vehicle-front.jpg" alt="live entry camera" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
+        <img src="http://localhost:8000/api/stream" alt="live entry camera" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
         <div style="position:absolute;top:12px;left:12px;display:flex;align-items:center;gap:7px;background:var(--status-danger);border-radius:var(--radius-full);padding:5px 12px;">
           <span style="width:7px;height:7px;border-radius:var(--radius-full);background:var(--white);animation:pulse 1.4s infinite;"></span>
-          <span style="font-family:var(--font-display);font-weight:var(--fw-bold);font-size:10px;color:var(--white);letter-spacing:.1em;">LIVE</span>
+          <span style="font-family:var(--font-display);font-weight:var(--fw-bold);font-size:10px;color:var(--white);letter-spacing:.1em;">LIVE USB CAM</span>
         </div>
         <span style="position:absolute;top:14px;right:14px;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--white);text-shadow:0 1px 3px rgba(0,0,0,.8);font-variant-numeric:tabular-nums;">ENTRY CAM · 14:32:08</span>
         <div style="position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:11px;padding:12px 14px;background:linear-gradient(0deg,rgba(3,7,18,.85),transparent);">

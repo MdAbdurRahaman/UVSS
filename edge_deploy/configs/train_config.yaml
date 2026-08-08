@@ -227,7 +227,7 @@ inference:
     frame_rate: 30
 
   quality:
-    top_k_per_track: 5         # keep the best 5 crops per track ID
+    top_k_per_track: 1         # keep ONLY the single best crop & full frame per subject
     weights:
       sharpness: 0.35
       size: 0.25
