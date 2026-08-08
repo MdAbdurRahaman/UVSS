@@ -76,8 +76,29 @@ export class DriverFaceComponent implements OnInit, OnDestroy {
     }
   }
 
+  /** Storage folder information */
+  savedFolderPath = '/home/lab-ros/Documents/mishu Uvss/dubotech_uvss-main/edge_deploy/sessions/';
+  showStorageInfo = false;
+
   selectRecord(record: DriverFaceRecord): void {
     this.selectedRecord = record;
+  }
+
+  /** Open saved images folder on OS file manager & open web viewer */
+  openSavedFiles(): void {
+    this.showStorageInfo = !this.showStorageInfo;
+    fetch('http://localhost:8000/api/open-folder', { method: 'POST' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.path) {
+          this.savedFolderPath = data.path;
+        }
+      })
+      .catch(() => {});
+  }
+
+  openWebGallery(): void {
+    window.open('http://localhost:8000/session-files/', '_blank');
   }
 
   private connectWebSocket(): void {

@@ -707,6 +707,28 @@ def build_app(engine: EdgeEngine) -> FastAPI:
     def session_stop(trigger: str = "manual") -> Any:
         return JSONResponse(engine.stop_session(trigger))
 
+    @app.post("/api/open-folder")
+    def open_folder() -> Any:
+        import subprocess, sys
+        folder_path = str(SESSIONS_DIR.resolve())
+        try:
+            if sys.platform == "win32":
+                subprocess.Popen(["explorer", folder_path])
+            elif sys.platform == "darwin":
+                subprocess.Popen(["open", folder_path])
+            else:
+                subprocess.Popen(["xdg-open", folder_path])
+            return JSONResponse({"ok": True, "path": folder_path})
+        except Exception as err:
+            return JSONResponse({"ok": False, "error": str(err), "path": folder_path})
+
+    @app.get("/api/storage-info")
+    def storage_info() -> Any:
+        return JSONResponse({
+            "sessions_dir": str(SESSIONS_DIR.resolve()),
+            "web_url": "http://localhost:8000/session-files/"
+        })
+
     @app.get("/api/status")
     def status() -> Any:
         return JSONResponse(engine.status())
