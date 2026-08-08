@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UVSS Edge — Live Detection</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">UVSS<span class="brand-sub">edge detection</span></div>
+  <div class="pills">
+    <span class="pill" id="pill-state">IDLE</span>
+    <span class="pill dim" id="pill-model">model —</span>
+    <span class="pill dim" id="pill-accel">—</span>
+    <span class="pill dim" id="pill-fps">0.0 FPS</span>
+    <span class="pill dim" id="pill-infer">0 ms</span>
+    <span class="pill dim" id="pill-conn">connecting…</span>
+  </div>
+</header>
+
+<main class="layout">
+
+  <!-- ============ LEFT: live feed + controls ============ -->
+  <section class="col-main">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Live feed</h2>
+        <span class="hint" id="detect-hint">detecting: —</span>
+      </div>
+      <div class="video-wrap">
+        <img id="stream" src="/api/stream" alt="live feed">
+        <div class="rec-badge" id="rec-badge">● REC</div>
+        <div class="video-overlay" id="video-overlay">
+          <div class="overlay-inner">
+            <div class="overlay-title">Waiting for START</div>
+            <div class="overlay-sub">
+              AI detection begins on the start signal.<br>
+              Press <kbd>S</kbd> to start · <kbd>X</kbd> to stop
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="btn-start" class="btn btn-start">
+          ▶ START <span class="key">S</span>
+        </button>
+        <button id="btn-stop" class="btn btn-stop" disabled>
+          ■ STOP <span class="key">X</span>
+        </button>
+        <div class="session-meta">
+          <div><span class="meta-label">session</span>
+               <span id="meta-id">—</span></div>
+          <div><span class="meta-label">elapsed</span>
+               <span id="meta-elapsed">0.0 s</span></div>
+          <div><span class="meta-label">frames</span>
+               <span id="meta-frames">0</span></div>
+          <div><span class="meta-label">trigger</span>
+               <span id="meta-trigger">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- clip of the last completed session -->
+    <div class="panel" id="clip-panel" hidden>
+      <div class="panel-head">
+        <h2>Recorded clip</h2>
+        <span class="hint" id="clip-hint"></span>
+      </div>
+      <video id="clip-player" controls playsinline></video>
+      <div class="clip-actions">
+        <a id="clip-download" class="btn btn-ghost" download>Download clip</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RIGHT: detected people ============ -->
+  <section class="col-side">
+    <div class="panel fill">
+      <div class="panel-head">
+        <h2>Detected</h2>
+        <span class="hint"><span id="person-count">0</span> subject(s)</span>
+      </div>
+      <div id="people" class="people">
+        <div class="empty" id="people-empty">
+          Nothing detected yet.<br>
+          <small>Subjects and their best images appear here once a session
+          is running.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="history-panel">
+      <div class="panel-head"><h2>Past sessions</h2></div>
+      <div id="history" class="history">
+        <div class="empty"><small>No completed sessions yet.</small></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- full-size image viewer -->
+<div class="lightbox" id="lightbox" hidden>
+  <div class="lightbox-bar">
+    <span id="lightbox-caption"></span>
+    <div class="lb-toggle">
+      <button class="lb-btn active" id="lb-crop">Cropped</button>
+      <button class="lb-btn" id="lb-full">Whole frame</button>
+    </div>
+    <a class="btn btn-ghost" id="lightbox-download" download>Download</a>
+    <button class="btn btn-ghost" id="lightbox-close">Close ✕</button>
+  </div>
+  <img id="lightbox-img" alt="">
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

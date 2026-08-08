@@ -1,0 +1,254 @@
+# =============================================================================
+# train_config.yaml — single source of truth for dataset prep + training
+#
+# Consumed by:
+#   scripts/02_prepare_and_augment.py  -> `prepare` and `offline_aug` sections
+#   scripts/03_train.py                -> `train` section
+#   scripts/04_export_model.py         -> `export` section
+#   scripts/05_evaluate.py             -> `train.data`, `export`
+#
+# Every path is relative to the PROJECT ROOT (the folder containing this repo),
+# and is resolved absolutely at runtime, so scripts work from any CWD.
+# =============================================================================
+
+project:
+  name: uvss_face_detection
+  seed: 42
+
+
+# -----------------------------------------------------------------------------
+# 1. Dataset preparation (scripts/02_prepare_and_augment.py)
+# -----------------------------------------------------------------------------
+prepare:
+  # Which source datasets to fold into datasets/combined.
+  # A dataset that is not present on disk is skipped with a warning.
+  use_widerface: true
+  use_ufdd: true
+  # DriveFace is DISABLED by default: it is 606 frames of only four drivers shot
+  # as continuous sequences, so it adds four specific faces rather than genuine
+  # variety. Set true (and tune `driveface.frame_stride` below) if you
+  # specifically want in-cabin footage in the mix.
+  use_driveface: false
+
+  # Fraction of the *training* pool held out for validation when a dataset has
+  # no official val split (UFDD, DriveFace). WIDER FACE's own val split is used
+  # as-is and is never augmented.
+  val_split: 0.10
+
+  # --- Per-source shaping ----------------------------------------------------
+  # DrivFace is 606 frames from only FOUR drivers, recorded as continuous
+  # sequences — consecutive frames are near-duplicates. Feeding all 606 in (let
+  # alone oversampling them) teaches the model four specific faces rather than
+  # "faces through a windscreen". So: take every Nth frame, and do NOT treat it
+  # as hard-subset material.
+  driveface:
+    frame_stride: 4         # 606 -> ~152 frames; raise to thin it further
+    treat_as_hard: false    # true would trigger hard_oversample (x3) — don't
+    max_images: 0           # extra hard cap after striding; 0 = no cap
+
+  # UFDD images ARE genuinely diverse adverse conditions, so they stay marked
+  # hard. Adjust only if you source an unusually redundant copy.
+  ufdd:
+    frame_stride: 1
+    treat_as_hard: true
+    max_images: 0
+
+  # --- Label hygiene ---------------------------------------------------------
+  min_box_px: 8          # drop boxes narrower/shorter than this many pixels
+  min_visibility: 0.35   # keep an augmented box only if >=35% of it survives
+  drop_invalid: true     # honour WIDER FACE's `invalid` attribute flag
+  max_faces_per_image: 200  # skip pathological crowd images (dense-crowd noise)
+
+  # --- WIDER FACE Hard weighting --------------------------------------------
+  # A sample counts as "hard" when it contains faces that are small, blurred,
+  # occluded or in an atypical pose — exactly the vehicle/through-glass regime.
+  hard:
+    small_face_px: 32          # a face below this size counts toward hardness
+    min_hard_faces: 1          # #hard faces needed for the image to be "hard"
+    use_blur_flag: true        # WIDER attr: blur   (1=normal blur, 2=heavy)
+    use_occlusion_flag: true   # WIDER attr: occlusion (1=partial, 2=heavy)
+    use_pose_flag: true        # WIDER attr: pose   (1=atypical)
+  # Each hard image is emitted this many times with different augmentations.
+  hard_oversample: 3
+  # Each normal image is emitted this many times.
+  normal_oversample: 1
+  # Extra un-augmented copy of every source image (keeps clean-domain accuracy).
+  keep_original: true
+
+  # --- Output ----------------------------------------------------------------
+  out_dir: datasets/combined
+  image_ext: .jpg
+  jpeg_quality: 92
+  workers: 0               # 0 = os.cpu_count() - 1
+
+
+# -----------------------------------------------------------------------------
+# 2. Offline augmentation — vehicle + glass conditions (Albumentations)
+#    These are the effects Ultralytics' online augmentation cannot produce.
+# -----------------------------------------------------------------------------
+offline_aug:
+  enabled: true
+
+  # Blur — vehicle motion and cheap-lens softness
+  motion_blur_prob: 0.35
+  motion_blur_limit: 15        # odd kernel size upper bound
+  gaussian_blur_prob: 0.25
+  gaussian_blur_limit: 7
+  defocus_prob: 0.10
+
+  # Tone — tunnels, night, backlight, auto-exposure hunting
+  clahe_prob: 0.35
+  clahe_clip_limit: 4.0
+  brightness_contrast_prob: 0.60
+  brightness_limit: 0.35
+  contrast_limit: 0.35
+  gamma_prob: 0.30
+  gamma_limit: [60, 160]
+  hue_sat_prob: 0.25
+
+  # Glass — the money transforms for windshield/side-window footage
+  glare_prob: 0.40             # bright sun flare / specular blob
+  glare_num_flare_circles: [4, 9]
+  reflection_prob: 0.35        # ghosted dashboard reflection streaks
+  reflection_alpha: [0.10, 0.35]
+  tint_prob: 0.20              # green/blue automotive glass tint
+  tint_strength: [0.05, 0.20]
+  rain_prob: 0.12              # droplets / wet glass
+  fog_prob: 0.10               # haze, condensation
+
+  # Geometry — camera mounted off-axis, vehicle pitch/roll
+  perspective_prob: 0.40
+  perspective_scale: [0.02, 0.10]
+  rotate_prob: 0.45
+  rotate_limit: 18             # degrees
+  scale_shift_prob: 0.35
+  scale_limit: 0.25
+  shift_limit: 0.10
+  hflip_prob: 0.50
+
+  # Occlusion — pillars, wipers, sun visor, steering wheel
+  cutout_prob: 0.30
+  cutout_holes: [1, 4]
+  cutout_size_frac: [0.05, 0.18]
+
+  # Sensor — low-light gain, compression on the video link
+  iso_noise_prob: 0.30
+  gauss_noise_prob: 0.25
+  jpeg_prob: 0.45
+  jpeg_quality: [45, 92]
+
+  # Downscale-then-upscale: simulates far/low-res faces through glass
+  downscale_prob: 0.25
+  downscale_range: [0.35, 0.85]
+
+
+# -----------------------------------------------------------------------------
+# 3. Training (scripts/03_train.py)  — keys map 1:1 to Ultralytics train() args
+# -----------------------------------------------------------------------------
+train:
+  model: yolo11n.pt          # YOLOv11 nano. `yolov11n.pt` is auto-corrected.
+  data: datasets/combined/data.yaml
+  imgsz: 640
+  epochs: 120
+  batch: -1                  # -1 = Ultralytics AutoBatch (~60% VRAM). Use 16 to pin.
+  patience: 25
+  optimizer: AdamW
+  lr0: 0.001
+  lrf: 0.01
+  momentum: 0.937
+  weight_decay: 0.0005
+  warmup_epochs: 3.0
+  cos_lr: true
+  workers: 8
+  device: null               # null = auto-detect (cuda:0 / mps / cpu)
+  project: runs/train
+  name: yolo11n_face_vehicle
+  exist_ok: false
+  pretrained: true
+  amp: true                  # mixed precision — big speedup on modern GPUs
+  cache: false               # 'ram' if the dataset fits in memory
+  val: true
+  plots: true
+  save_period: -1            # >0 to checkpoint every N epochs
+  close_mosaic: 15           # disable mosaic for the last N epochs
+  single_cls: true           # one class: face
+  rect: false
+  seed: 42
+
+  # --- Strong ONLINE augmentation (applied fresh every epoch) ---------------
+  hsv_h: 0.020
+  hsv_s: 0.75
+  hsv_v: 0.50
+  degrees: 12.0
+  translate: 0.15
+  scale: 0.60
+  shear: 4.0
+  perspective: 0.0008
+  flipud: 0.0
+  fliplr: 0.5
+  mosaic: 1.0
+  mixup: 0.15
+  copy_paste: 0.10
+  erasing: 0.4
+  auto_augment: randaugment
+
+  # Where 03_train.py copies the finished weights.
+  models_dir: models
+
+
+# -----------------------------------------------------------------------------
+# 4. Export (scripts/04_export_model.py)
+# -----------------------------------------------------------------------------
+export:
+  weights: models/best.pt
+  formats: [onnx, torchscript]
+  imgsz: 640
+  opset: 12
+  simplify: true
+  dynamic: false      # true -> variable batch/size ONNX (slower, more flexible)
+  half: false         # FP16; only useful when the target runtime is GPU
+  nms: false          # keep NMS outside the graph — src/detector.py does it
+
+
+# -----------------------------------------------------------------------------
+# 5. Inference defaults (src/ and gui/app.py read these as starting values)
+# -----------------------------------------------------------------------------
+inference:
+  conf_threshold: 0.35
+  iou_threshold: 0.45
+  imgsz: 640
+  max_detections: 100
+
+  tracker:
+    type: bytetrack            # bytetrack | sort
+    track_activation_threshold: 0.30
+    lost_track_buffer: 45      # frames a track survives without a match
+    minimum_matching_threshold: 0.85
+    frame_rate: 30
+
+  quality:
+    top_k_per_track: 5         # keep the best 5 crops per track ID
+    weights:
+      sharpness: 0.35
+      size: 0.25
+      confidence: 0.25
+      frontality: 0.15
+    min_face_px: 40            # ignore crops smaller than this for the gallery
+    min_improvement: 0.02      # new crop must beat the worst kept by this much
+    cooldown_frames: 3         # min frames between two saves for one track
+    save_dir: best_images      # any detected class, not just faces
+    crop_margin: 0.20          # expand the box by 20% before cropping
+
+    # --- appearance guard against tracker ID switches ----------------------
+    # ByteTrack/BoT-SORT associate on motion + IoU only, so when two people
+    # cross, identities can swap and one track ends up holding crops of two
+    # different individuals. A banded HSV colour histogram (clothing colour is
+    # very discriminative) is compared against the identity's existing crops;
+    # a crop that does not match starts a NEW gallery identity ("10" -> "10b")
+    # instead of polluting the existing one.
+    #
+    # Measured on real crops: same person >= 0.77, different people <= 0.55.
+    #   raise  -> splits more eagerly (risk: one person split in two)
+    #   lower  -> merges more eagerly (risk: two people in one folder)
+    appearance_split: true
+    appearance_threshold: 0.62

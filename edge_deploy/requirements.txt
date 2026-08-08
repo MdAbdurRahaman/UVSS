@@ -1,0 +1,22 @@
+# UVSS edge service — runtime dependencies
+#
+# Python 3.10-3.12 recommended.
+#   pip install -r requirements.txt
+#
+# For GPU inference (about 5x faster), install DirectML INSTEAD of the plain
+# onnxruntime line below:
+#   pip uninstall -y onnxruntime && pip install onnxruntime-directml
+
+numpy>=1.24,<2.5
+opencv-python>=4.8.0
+PyYAML>=6.0
+onnxruntime>=1.17.0
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+
+# Optional, improves multi-person tracking through crossings
+supervision>=0.20.0
+scipy>=1.10.0
+
+# Optional, only needed by ros_bridge.py
+requests>=2.31.0
